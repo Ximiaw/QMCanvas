@@ -2,45 +2,22 @@
 // Created by m3311 on 2026/2/28.
 //
 
-#include "QMCanvasView.h"
-#include "QMCanvasScene.h"
+#include "View.h"
 
-QMCanvasView::QMCanvasView(QWidget *parent):QScrollArea(parent) {
-    viewportPointer_.reset(new Viewport(this));
+View::View(QWidget *parent):QScrollArea(parent) {
 }
 
-QMCanvasView::QMCanvasView(QMCanvasScene *scene, QWidget *parent)
-    :QMCanvasView(parent){
-    setCanvasScene(scene);
-}
+View::~View() = default;
 
-QMCanvasView::~QMCanvasView() = default;
-
-const QMCanvasView::Viewport* QMCanvasView::viewport() const {
-    return  viewportPointer_.get();
-}
-
-void QMCanvasView::setWheelMode(WheelMode mode) {
-    if (wheelMode_!=mode) {
+void View::setWheelMode(WheelMode mode) {
+    if (wheelMode_!=mode)
         wheelMode_=mode;
-        emit wheelModeChanged(mode);
-    }
 }
-WheelMode QMCanvasView::wheelMode() const {
+WheelMode View::wheelMode() const {
     return wheelMode_;
 }
 
-void QMCanvasView::setCanvasScene(QMCanvasScene* scene) {
-    if (scenePointer_.get()!=scene) {
-        scenePointer_.reset(scene);
-        emit canvasSceneChanged(scene);
-    }
-}
-QMCanvasScene *QMCanvasView::canvasScene() const {
-    return scenePointer_.get();
-}
-
-void QMCanvasView::wheelEvent(QWheelEvent *event) {
+void View::wheelEvent(QWheelEvent *event) {
     switch (wheelMode()) {
         case WheelMode::ROLL:
             QScrollArea::wheelEvent(event);
@@ -51,6 +28,6 @@ void QMCanvasView::wheelEvent(QWheelEvent *event) {
     }
 }
 
-void QMCanvasView::renderScaled(QWheelEvent *event) {
+void View::renderScaled(QWheelEvent *event) {
     //
 }

@@ -10,3 +10,12 @@
 ***
 ### `WheelMode wheelMode() const`
 获取当前模式
+***
+### `void setCanvasScene(QMCanvasScene* scene)`
+设置渲染场景
+***
+### `QMCanvasScene* canvasScene() const`
+获取渲染场景
+***
+### `const Viewport* viewport() const`
+获取视窗指针

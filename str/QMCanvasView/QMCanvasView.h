@@ -5,8 +5,34 @@
 #ifndef MAIN_QMCANVASVIEW_H
 #define MAIN_QMCANVASVIEW_H
 
+#include <QObject>
 
-class QMCanvasView {
+#include "Viewport.h"
+#include "View.h"
+#include "QMCanvasScene.h"
+
+class QMCanvasView : public QObject{
+    Q_OBJECT
+    Q_ENUM(WheelMode)
+    Q_PROPERTY(WheelMode wheelMode READ wheelMode WRITE setWheelMode NOTIFY wheelModeChanged)
+    Q_PROPERTY(const Viewport* viewport READ viewport)
+    Q_PROPERTY(QMCanvasScene* canvasScene READ canvasScene WRITE setCanvasScene NOTIFY canvasSceneChanged)
+
+public:
+    QMCanvasView(QObject* parent=nullptr);
+    ~QMCanvasView()=default;
+
+private:
+    View view_;
+    Viewport viewport_;
+    QSharedPointer<QMCanvasScene> scenePointer_;
+
+public:
+    void setWheelMode(WheelMode mode);
+    [[nodiscard]] WheelMode wheelMode() const;
+    void setCanvasScene(QMCanvasScene* scene);
+    [[nodiscard]] QMCanvasScene* canvasScene() const;
+    const Viewport* viewport() const;
 };
 
 

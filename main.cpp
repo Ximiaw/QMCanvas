@@ -1,9 +1,9 @@
-#include "QMCanvasView.h"
+#include "View.h"
 #include <QApplication>
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    QMCanvasView qmcv;
+    View qmcv;
     qmcv.resize(500, 500);
     qmcv.show();
     return QApplication::exec();
