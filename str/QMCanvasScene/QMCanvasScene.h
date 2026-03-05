@@ -18,6 +18,7 @@ class QMCanvasScene : public QObject {
 private:
     QList<QMDrawObject*> drawObject_;
     QList<QPixmap> image_;
+    QRectF viewportRect_;
     qreal factor_=1.0;//每次缩放倍率
     qreal rate_=1;//当前倍率，1为默认值
 public:
@@ -32,6 +33,9 @@ public:
 
     void addPixmap(QPixmap pixmap);
     const QList<QPixmap>* pixmaps() const;
+
+    QPixmap getViewportPixmap();
+    QRect getViewportRect();
 
     qreal factor();
     void setFactor(qreal factor);

@@ -5,6 +5,7 @@
 #include "View.h"
 
 View::View(QWidget *parent):QScrollArea(parent) {
+    setWidget(new QWidget);
 }
 
 View::~View() = default;
@@ -20,27 +21,31 @@ WheelMode View::wheelMode() const {
 void View::wheelEvent(QWheelEvent *event) {
     switch (wheelMode()) {
         case WheelMode::ROLL:
-            translation();
             QScrollArea::wheelEvent(event);
+            translation();
             break;
         case WheelMode::ZOOM:
-            renderScaled(event);
+            factor(event);
             break;
     }
 }
 
 void View::translation(){
-
+    QRect rect(
+        horizontalScrollBar()->value()
+        ,verticalScrollBar()->value()
+        ,viewport()->width()
+        ,viewport()->height());
+    if (!widget()->rect().contains(rect)){
+        rect.setX(widget()->width() - viewport()->width());
+        rect.setY(widget()->height() - viewport()->height());
+    }
+    emit viewportChanged(rect);
 }
 
-void View::renderScaled(QWheelEvent *event) {
-
-}
-
-void View::renderScaledA(){
-
-}
-
-void View::renderScaledP(){
-
+void View::factor(QWheelEvent *event) {
+    QPoint numDegrees = event->angleDelta();
+    QPoint numSteps = numDegrees / 8 / 15;
+    if (numSteps.y()>=1 || numSteps.y()<=-1)
+        emit scaleFactorChanged(numSteps.y()>0,widget()->mapFromGlobal(QCursor::pos()));
 }

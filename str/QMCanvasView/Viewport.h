@@ -17,6 +17,8 @@ class Viewport :public QOpenGLWidget{
     Q_OBJECT
 private:
     QPointer<QMCanvasScene> scenePointer_;
+private:
+    void update();
 public:
     Viewport(QWidget* parent=nullptr);
     ~Viewport() override = default;
