@@ -8,6 +8,8 @@
 #include <QObject>
 #include <QList>
 #include <QRectF>
+#include <QImage>
+#include <QPixmap>
 
 #include "QMDrawObject.h"
 
@@ -15,10 +17,12 @@ class QMCanvasScene : public QObject {
     Q_OBJECT
 private:
     QList<QMDrawObject*> drawObject_;
+    QList<QPixmap> image_;
     qreal factor_=1.0;//每次缩放倍率
-    qreal rate_=1;//1为默认值
+    qreal rate_=1;//当前倍率，1为默认值
 public:
     QMCanvasScene(QObject* parent);
+    QMCanvasScene(QPixmap pixmap,QObject* parent);
     ~QMCanvasScene() override = default;
 
     const QList<QMDrawObject*> graphicList();
@@ -26,8 +30,12 @@ public:
     void removeGraphic(QMDrawObject* graphic);
     void deleteGraphic(QMDrawObject* graphic);
 
+    void addPixmap(QPixmap pixmap);
+    const QList<QPixmap>* pixmaps() const;
+
     qreal factor();
     void setFactor(qreal factor);
+
     qreal extraViewportMargin() const;
     void setExtraViewportMargin(qreal rate);
 

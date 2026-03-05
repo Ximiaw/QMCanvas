@@ -6,6 +6,7 @@
 
 QMCanvasView::QMCanvasView(QObject* parent):
     QObject(parent){
+    viewport_.setParent(view_.widget());
     connect(this,&QMCanvasView::canvasSceneChanged,&viewport_,&Viewport::onSceneChanged);
 }
 
@@ -28,6 +29,10 @@ void QMCanvasView::setCanvasScene(QMCanvasScene* scene) {
     if (scenePointer_.get()!=scene) {
         disconnect(scenePointer_.get());
         scenePointer_.reset(scene);
+        if (scene->pixmaps()->length()>0)
+            view_.widget()->resize(scene->pixmaps()->at(0).size());
+        else
+            view_.widget()->resize(0,0);
         connect(&view_,&View::viewportChanged,scene,&QMCanvasScene::onViewportChanged);
         connect(&view_,&View::scaleFactorChanged,scene,&QMCanvasScene::onScaleBy);
         emit canvasSceneChanged(scene);

@@ -19,6 +19,7 @@ private:
     QPointer<QMCanvasScene> scenePointer_;
 public:
     Viewport(QWidget* parent=nullptr);
+    ~Viewport() override = default;
 protected:
     void paintEvent(QPaintEvent *event) override;
 public slots:
