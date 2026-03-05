@@ -29,6 +29,18 @@ void View::wheelEvent(QWheelEvent *event) {
     }
 }
 
+void View::translation(){
+
+}
+
 void View::renderScaled(QWheelEvent *event) {
-    //
+
+}
+
+void View::renderScaledA(){
+
+}
+
+void View::renderScaledP(){
+
 }

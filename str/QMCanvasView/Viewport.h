@@ -21,8 +21,8 @@ public:
     Viewport(QWidget* parent=nullptr);
 protected:
     void paintEvent(QPaintEvent *event) override;
-signals:
-
+public slots:
+    void onSceneChanged(QMCanvasScene* scene);
 };
 
 #endif //MAIN_VIEWPORT_H

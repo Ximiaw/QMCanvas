@@ -5,6 +5,12 @@
 
 # QMCanvasView
 ***
+### `QMCanvasView(QObject* parent=nullptr);`
+初始化对象
+***
+### `QMCanvasView(QMCanvasScene* scene,QObject* parent=nullptr);`
+初始化对象，并设置Scene
+***
 ### `void setWheelMode(WheelMode mode)`
 设置滚轮模式
 ***
@@ -19,3 +25,8 @@
 ***
 ### `const Viewport* viewport() const`
 获取视窗指针
+***
+## signals
+***
+### `void canvasSceneChanged(QMCanvasScene* scene);`
+修改scene时发送信号

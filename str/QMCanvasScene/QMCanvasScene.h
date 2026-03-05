@@ -7,6 +7,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QRectF>
 
 #include "QMDrawObject.h"
 
@@ -21,6 +22,12 @@ public:
     const QList<QMDrawObject*> graphicList();
     void addGraphic(QMDrawObject* graphic);
     void removeGraphic(QMDrawObject* graphic);
+    void deleteGraphic(QMDrawObject* graphic);
+    void setExtraViewportMargin(qreal rate);
+
+public slots:
+    void onViewportChanged(QRectF rect);
+    void onZoomChanged(qreal zoom);
 };
 
 

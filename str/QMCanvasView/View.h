@@ -43,7 +43,8 @@ private://all
 private://part
     void renderScaledP();
 signals:
-    void viewportChanged(QRectF viewport);
+    void viewportChanged(QRectF rect);
+    void zoomChanged(qreal zoom);
 };
 
 

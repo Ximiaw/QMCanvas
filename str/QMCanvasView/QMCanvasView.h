@@ -36,7 +36,6 @@ public:
     const Viewport* viewport() const;
 
 signals:
-    void wheelModeChanged(WheelMode mode);
     void canvasSceneChanged(QMCanvasScene* scene);
 };
 
