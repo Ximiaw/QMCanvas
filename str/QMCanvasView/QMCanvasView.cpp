@@ -29,7 +29,7 @@ void QMCanvasView::setCanvasScene(QMCanvasScene* scene) {
         disconnect(scenePointer_.get());
         scenePointer_.reset(scene);
         connect(&view_,&View::viewportChanged,scene,&QMCanvasScene::onViewportChanged);
-        connect(&view_,&View::zoomChanged,scene,&QMCanvasScene::onZoomChanged);
+        connect(&view_,&View::scaleFactorChanged,scene,&QMCanvasScene::onScaleBy);
         emit canvasSceneChanged(scene);
     }
 }

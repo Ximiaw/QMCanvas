@@ -10,6 +10,7 @@
 #include <QRectF>
 #include <QWidget>
 #include <QScrollArea>
+#include <QScrollBar>
 #include <QWheelEvent>
 #include <QtOpenGLWidgets/QOpenGLWidget>
 
@@ -36,15 +37,10 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
 private:
     void translation();
-private:
-    void renderScaled(QWheelEvent *event);
-private://all
-    void renderScaledA();
-private://part
-    void renderScaledP();
+    void factor(QWheelEvent *event);
 signals:
     void viewportChanged(QRectF rect);
-    void zoomChanged(qreal zoom);
+    void scaleFactorChanged(bool magnify,QPoint point);
 };
 
 
