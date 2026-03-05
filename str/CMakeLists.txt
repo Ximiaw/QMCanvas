@@ -9,6 +9,7 @@ qt_add_library(QMCanvas STATIC
         QMCanvasView/Viewport.h
         QMCanvasView/QMCanvasView.cpp
         QMCanvasView/QMCanvasView.h
+        QMDraw/QMDrawObject.h
 )
 
 target_link_libraries(QMCanvas PRIVATE
@@ -19,4 +20,5 @@ target_link_libraries(QMCanvas PRIVATE
 target_include_directories(QMCanvas PUBLIC
     QMCanvasScene
     QMCanvasView
+    QMDraw
 )

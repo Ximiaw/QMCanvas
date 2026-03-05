@@ -9,18 +9,20 @@
 #include <QWidget>
 #include <QtOpenGLWidgets/QOpenGLWidget>
 #include <QPaintEvent>
+#include <QPointer>
 
 #include "QMCanvasScene.h"
 
 class Viewport :public QOpenGLWidget{
     Q_OBJECT
 private:
-    QMCanvasScene* scene_;
+    QPointer<QMCanvasScene> scenePointer_;
 public:
     Viewport(QWidget* parent=nullptr);
-    Viewport(QMCanvasScene* scene,QWidget* parent);
 protected:
     void paintEvent(QPaintEvent *event) override;
+signals:
+
 };
 
 #endif //MAIN_VIEWPORT_H

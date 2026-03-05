@@ -7,13 +7,11 @@
 
 #include <QObject>
 #include <QtCore>
+#include <QRectF>
 #include <QWidget>
 #include <QScrollArea>
 #include <QWheelEvent>
 #include <QtOpenGLWidgets/QOpenGLWidget>
-#include <QRectF>
-#include <QScopedPointer>
-#include <QSharedPointer>
 
 enum class WheelMode {
     ROLL,
@@ -36,13 +34,16 @@ public:
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
-
+private:
+    void translation();
 private:
     void renderScaled(QWheelEvent *event);
 private://all
     void renderScaledA();
 private://part
     void renderScaledP();
+signals:
+    void viewportChanged(QRectF viewport);
 };
 
 

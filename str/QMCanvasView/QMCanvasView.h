@@ -6,6 +6,7 @@
 #define MAIN_QMCANVASVIEW_H
 
 #include <QObject>
+#include <QSharedPointer>
 
 #include "Viewport.h"
 #include "View.h"
@@ -20,7 +21,7 @@ class QMCanvasView : public QObject{
 
 public:
     QMCanvasView(QObject* parent=nullptr);
-    ~QMCanvasView()=default;
+    QMCanvasView(QMCanvasScene* scene,QObject* parent=nullptr);
 
 private:
     View view_;
@@ -33,6 +34,10 @@ public:
     void setCanvasScene(QMCanvasScene* scene);
     [[nodiscard]] QMCanvasScene* canvasScene() const;
     const Viewport* viewport() const;
+
+signals:
+    void wheelModeChanged(WheelMode mode);
+    void canvasSceneChanged(QMCanvasScene* scene);
 };
 
 

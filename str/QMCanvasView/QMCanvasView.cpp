@@ -5,10 +5,18 @@
 #include "QMCanvasView.h"
 
 QMCanvasView::QMCanvasView(QObject* parent):
-    QObject(parent){}
+    QObject(parent) {}
+
+QMCanvasView::QMCanvasView(QMCanvasScene *scene, QObject *parent) :
+    QMCanvasView(parent){
+    scenePointer_.reset(scene);
+}
 
 void QMCanvasView::setWheelMode(WheelMode mode) {
-    view_.setWheelMode(mode);
+    if (view_.wheelMode()!=mode) {
+        view_.setWheelMode(mode);
+        emit wheelModeChanged(mode);
+    }
 }
 
 WheelMode QMCanvasView::wheelMode() const {
@@ -16,7 +24,10 @@ WheelMode QMCanvasView::wheelMode() const {
 }
 
 void QMCanvasView::setCanvasScene(QMCanvasScene* scene) {
-    scenePointer_.reset(scene);
+    if (scenePointer_.get()!=scene) {
+        scenePointer_.reset(scene);
+        emit canvasSceneChanged(scene);
+    }
 }
 
 QMCanvasScene* QMCanvasView::canvasScene() const {

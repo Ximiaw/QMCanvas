@@ -20,6 +20,7 @@ WheelMode View::wheelMode() const {
 void View::wheelEvent(QWheelEvent *event) {
     switch (wheelMode()) {
         case WheelMode::ROLL:
+            translation();
             QScrollArea::wheelEvent(event);
             break;
         case WheelMode::ZOOM:
