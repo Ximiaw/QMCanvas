@@ -10,10 +10,15 @@
 
 class QMDrawObject : public QObject{
     Q_OBJECT
+private:
+    bool record = false;
 public:
     QMDrawObject(QObject* parent);
     ~QMDrawObject() override = default;
     virtual void draw(QPainter* painter) = 0;
+    virtual void begin(QPoint point) = 0;
+    virtual void end(QPoint point) = 0;
+    virtual void recordPoint (QPoint point) = 0;//在begin前禁止记录点
 };
 
 

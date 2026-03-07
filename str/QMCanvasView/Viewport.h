@@ -10,6 +10,9 @@
 #include <QtOpenGLWidgets/QOpenGLWidget>
 #include <QPaintEvent>
 #include <QPointer>
+#include <QPainter>
+#include <QMouseEvent>
+#include <QCursor>
 
 #include "QMCanvasScene.h"
 
@@ -17,15 +20,23 @@ class Viewport :public QOpenGLWidget{
     Q_OBJECT
 private:
     QPointer<QMCanvasScene> scenePointer_;
-private:
-    void update();
+    bool updatePixmap_=false;
 public:
     Viewport(QWidget* parent=nullptr);
     ~Viewport() override = default;
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void mouseMoveEvent(QMouseEvent* event) override;
+    void mouseReleaseEvent(QMouseEvent* event) override;
+    void mousePressEvent(QMouseEvent* event) override;
+signals:
+    void mouseMove(QPoint point);
+    void mouseRelease(QPoint point);
+    void mousePress(QPoint point);
 public slots:
     void onSceneChanged(QMCanvasScene* scene);
+    void onRectChanged();
+    void onPixmapChanged();
 };
 
 #endif //MAIN_VIEWPORT_H

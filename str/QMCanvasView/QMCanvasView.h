@@ -30,9 +30,9 @@ private:
 
 public:
     void setWheelMode(WheelMode mode);
-    [[nodiscard]] WheelMode wheelMode() const;
+    WheelMode wheelMode() const;
     void setCanvasScene(QMCanvasScene* scene);
-    [[nodiscard]] QMCanvasScene* canvasScene() const;
+    QMCanvasScene* canvasScene() const;
     const Viewport* viewport() const;
 
 signals:

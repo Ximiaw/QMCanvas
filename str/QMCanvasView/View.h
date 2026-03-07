@@ -31,7 +31,7 @@ private:
 
 public:
     void setWheelMode(WheelMode mode);
-    [[nodiscard]] WheelMode wheelMode() const;
+    WheelMode wheelMode() const;
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
