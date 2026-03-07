@@ -56,7 +56,7 @@ void Viewport::mouseMoveEvent(QMouseEvent* event){
 
 void Viewport::mouseReleaseEvent(QMouseEvent* event){
     QWidget* widget=qobject_cast<QWidget*>(parent());
-    if (widget && event->button()==Qt::LeftButton)
+    if (widget && event->buttons()&Qt::LeftButton)
         emit mouseRelease(widget->mapFromGlobal(QCursor::pos()));
     QOpenGLWidget::mouseReleaseEvent(event);
 }

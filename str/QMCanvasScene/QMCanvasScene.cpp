@@ -22,13 +22,6 @@ void QMCanvasScene::addGraphic(QMDrawObject* graphic){
     drawObject_.append(graphic);
 }
 
-QMDrawObject* QMCanvasScene::removeGraphic(QMDrawObject* graphic){
-    if (!graphic || drawObject_.indexOf(graphic) == -1) return nullptr;
-    graphic->setParent(nullptr);
-    drawObject_.removeOne(graphic);
-    return graphic;
-}
-
 bool QMCanvasScene::deleteGraphic(QMDrawObject* graphic){
     if (!graphic || drawObject_.indexOf(graphic) == -1) return false;
     graphic->setParent(nullptr);
@@ -133,7 +126,7 @@ QMDrawObject* QMCanvasScene::activeDrawObject() const{
 }
 
 void QMCanvasScene::setActiveDrawObject(QMDrawObject* object){
-    if (!activeDrawObject_){
+    if (activeDrawObject_){
         activeDrawObject_->setParent(nullptr);
         activeDrawObject_->deleteLater();
     }
@@ -181,3 +174,5 @@ void QMCanvasScene::onMouseRelease(QPoint point){
     addGraphic(activeDrawObject());
     activeDrawObject_=nullptr;
 }
+
+//发送信号改View里bar的值

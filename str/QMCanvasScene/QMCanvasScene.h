@@ -32,7 +32,6 @@ public:
 
     const QList<QMDrawObject*> graphicList() const;
     void addGraphic(QMDrawObject* graphic);//添加到对象树
-    QMDrawObject* removeGraphic(QMDrawObject* graphic);
     bool deleteGraphic(QMDrawObject* graphic);
 
     void setPixmap(QPixmap& pixmap);
@@ -66,7 +65,6 @@ signals:
     void viewportRectChanged();//onViewportChanged和onScaleBy触发
     void viewportPixmapChanged();
 
-public:
 };
 
 
