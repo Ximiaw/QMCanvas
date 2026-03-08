@@ -13,6 +13,9 @@ QMCanvasView::QMCanvasView(QWidget* parent):
     QVBoxLayout* vl = new QVBoxLayout(this);
     setLayout(vl);
     vl->addWidget(&view_);
+
+    view_.horizontalScrollBar()->installEventFilter(this);
+    view_.verticalScrollBar()->installEventFilter(this);
 }
 
 QMCanvasView::QMCanvasView(QMCanvasScene *scene, QWidget *parent) :
@@ -38,10 +41,10 @@ void QMCanvasView::setCanvasScene(QMCanvasScene* scene) {
         connect(&view_,&View::viewportChanged,scene,&QMCanvasScene::onViewportChanged);
         connect(&view_,&View::scaleFactorChanged,scene,&QMCanvasScene::onScaleBy);
         connect(this,&QMCanvasView::canvasSceneChanged,&viewport_,&Viewport::onSceneChanged);
+        connect(this,&QMCanvasView::hBarChanged,scene,&QMCanvasScene::onHScrollBarChanged);
+        connect(this,&QMCanvasView::vBarChanged,scene,&QMCanvasScene::onVScrollBarChanged);
         connect(scene,&QMCanvasScene::viewportPixmapChanged,&viewport_,&Viewport::onPixmapChanged);
         connect(scene,&QMCanvasScene::viewPropertyChanged,&view_,&View::onPropertyChanged);
-        connect(view_.horizontalScrollBar(),&QScrollBar::sliderMoved,scene,&QMCanvasScene::onHScrollBarChanged);
-        connect(view_.verticalScrollBar(),&QScrollBar::sliderMoved,scene,&QMCanvasScene::onVScrollBarChanged);
 
         emit canvasSceneChanged(scene);
     }
@@ -53,4 +56,16 @@ QMCanvasScene* QMCanvasView::canvasScene() const {
 
 const Viewport* QMCanvasView::viewport() const {
     return &viewport_;
+}
+
+bool QMCanvasView::eventFilter(QObject* watched, QEvent* event){
+    if (event->type() == QEvent::Wheel) {
+        QScrollBar *vBar = view_.verticalScrollBar();
+        QScrollBar *hBar = view_.horizontalScrollBar();
+
+        if (watched == vBar) emit vBarChanged(vBar->value());
+        if (watched == hBar) emit hBarChanged(hBar->value());
+    }
+
+    return QWidget::eventFilter(watched, event);
 }

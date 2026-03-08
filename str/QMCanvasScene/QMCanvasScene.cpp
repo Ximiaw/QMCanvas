@@ -66,9 +66,9 @@ QRect QMCanvasScene::getViewportRect(){
     qreal qw = pixmap().width() * ratio();
     qreal qh = pixmap().height() * ratio();
 
-    if (w > pixmap_.width()) w = pixmap_.width();
+    if (w > qw) w = pixmap_.width();
     else if (w < 0) w = 0;
-    if (h > pixmap_.height()) h = pixmap_.height();
+    if (h > qh) h = pixmap_.height();
     else if (h < 0) h = 0;
     if (qw < x + w){
         rect.setX(qw - w);
@@ -199,13 +199,21 @@ void QMCanvasScene::onMouseRelease(QPoint point){
 }
 
 void QMCanvasScene::onHScrollBarChanged(int value){
-    viewportRect_.setWidth(value/ratio());
+    viewportRect_.setX(value/ratio());
     emit viewportRectChanged();
     emit viewportPixmapChanged();
 }
 
 void QMCanvasScene::onVScrollBarChanged(int value){
-    viewportRect_.setHeight(value/ratio());
+    viewportRect_.setY(value/ratio());
     emit viewportRectChanged();
     emit viewportPixmapChanged();
 }
+
+/*
+ *
+ *
+ * 记得给最大和最小倍数上限制，不然内存会爆
+ *
+ *
+ */

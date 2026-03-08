@@ -9,6 +9,7 @@ Viewport::Viewport(QWidget* parent):
     QWidget(parent){
     setAutoFillBackground(false);
     setMouseTracking(true);
+    setStyleSheet("background-color: white;");
 }
 
 void Viewport::paintEvent(QPaintEvent* event){

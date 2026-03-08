@@ -38,8 +38,13 @@ public:
     QMCanvasScene* canvasScene() const;
     const Viewport* viewport() const;
 
+protected:
+    bool eventFilter(QObject* watched, QEvent* event) override;
+
 signals:
     void canvasSceneChanged(QMCanvasScene* scene);
+    void hBarChanged(int value);
+    void vBarChanged(int value);
 };
 
 
