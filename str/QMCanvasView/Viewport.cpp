@@ -14,16 +14,12 @@ Viewport::Viewport(QWidget* parent):
 void Viewport::paintEvent(QPaintEvent* event){
     if (scenePointer_.isNull()) return;
     QPainter painter(this);
-    if (!updatePixmap_){
-        scenePointer_.get()->updatePixmap(&painter);
-        updatePixmap_=true;
-    }
+    scenePointer_.get()->updatePixmap(&painter);
     scenePointer_.get()->draw(&painter);
 }
 
 void Viewport::onSceneChanged(QMCanvasScene* scene){
     if (scenePointer_.get() != scene){
-        updatePixmap_=false;
         if (!scenePointer_.isNull())
             disconnect(scenePointer_.get());
         scenePointer_ = QPointer<QMCanvasScene>(scene);
@@ -31,7 +27,6 @@ void Viewport::onSceneChanged(QMCanvasScene* scene){
         connect(this,&Viewport::mouseRelease,scene,&QMCanvasScene::onMouseRelease);
         connect(this,&Viewport::mousePress,scene,&QMCanvasScene::onMousePress);
         connect(scene,&QMCanvasScene::viewportRectChanged,this,&Viewport::onRectChanged);
-        connect(scene,&QMCanvasScene::viewportPixmapChanged,this,&Viewport::onPixmapChanged);
         onRectChanged();
     }
 }
@@ -42,10 +37,11 @@ void Viewport::onRectChanged(){
     if (geometry() != rect){
         setGeometry(rect);
     }
+    update();
 }
 
 void Viewport::onPixmapChanged(){
-    updatePixmap_=false;
+    update();
 }
 
 void Viewport::mouseMoveEvent(QMouseEvent* event){

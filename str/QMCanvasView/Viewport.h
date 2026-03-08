@@ -35,6 +35,7 @@ signals:
 public slots:
     void onSceneChanged(QMCanvasScene* scene);
     void onRectChanged();
+    void onPixmapChanged();
 };
 
 #endif //MAIN_VIEWPORT_H

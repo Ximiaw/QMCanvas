@@ -42,17 +42,6 @@ QPixmap QMCanvasScene::getViewportPixmap(){
     qreal w = viewportRect_.width() * extraViewportMargin();
     qreal h = viewportRect_.height() * extraViewportMargin();
 
-    if (w * ratio() >= pixmap_.width() * ratio()){
-        QPixmap viewportPixmap = pixmap()
-            .scaledToHeight(h*ratio(), Qt::FastTransformation);
-        return viewportPixmap;
-    }
-    if (h * ratio() >= pixmap_.height() * ratio()){
-        QPixmap viewportPixmap = pixmap()
-            .scaledToWidth(w*ratio(), Qt::FastTransformation);
-        return viewportPixmap;
-    }
-
     x = x - (w - viewportRect_.width()) / 2;
     y = y - (h - viewportRect_.height()) / 2;
 
@@ -69,8 +58,8 @@ QRect QMCanvasScene::getViewportRect(){
     qreal w = viewportRect_.width() * ratio() * extraViewportMargin();
     qreal h = viewportRect_.height() * ratio() * extraViewportMargin();
 
-    x = x - (w - viewportRect_.width()) / 2;
-    y = y - (h - viewportRect_.height()) / 2;
+    x = x - (w - viewportRect_.width() * ratio()) / 2;
+    y = y - (h - viewportRect_.height() * ratio()) / 2;
 
     QRectF rect(x,y,w,h);
 
@@ -95,10 +84,9 @@ QRect QMCanvasScene::getViewportRect(){
 }
 
 void QMCanvasScene::updatePixmap(QPainter* painter){
-    QRect rect = getViewportRect();
-    rect.setX(0);
-    rect.setY(0);
-    painter->drawPixmap(rect,getViewportPixmap());
+    QPixmap pixmap =getViewportPixmap();
+    QRect rect = pixmap.rect();
+    painter->drawPixmap(rect,pixmap);
 }
 
 void QMCanvasScene::draw(QPainter* painter){
@@ -164,7 +152,8 @@ void QMCanvasScene::inform(){
 }
 
 void QMCanvasScene::onViewportChanged(QRectF rect){
-    viewportRect_=rect;
+    viewportRect_=QRect(rect.x()/ratio(),rect.y()/ratio()
+        ,rect.width()/ratio(),rect.height()/ratio());
     inform();
 }
 
@@ -209,7 +198,14 @@ void QMCanvasScene::onMouseRelease(QPoint point){
     activeDrawObject_=nullptr;
 }
 
-void QMCanvasScene::onScrollBarChanged(){
+void QMCanvasScene::onHScrollBarChanged(int value){
+    viewportRect_.setWidth(value/ratio());
+    emit viewportRectChanged();
+    emit viewportPixmapChanged();
+}
+
+void QMCanvasScene::onVScrollBarChanged(int value){
+    viewportRect_.setHeight(value/ratio());
     emit viewportRectChanged();
     emit viewportPixmapChanged();
 }

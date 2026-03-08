@@ -61,7 +61,8 @@ public slots:
     void onMouseMove(QPoint point);
     void onMouseRelease(QPoint point);
     void onMousePress(QPoint point);
-    void onScrollBarChanged();
+    void onHScrollBarChanged(int value);
+    void onVScrollBarChanged(int value);
 signals:
     void viewportRectChanged();//onViewportChanged和onScaleBy以及view的滚动条滚动触发
     void viewportPixmapChanged();
