@@ -36,10 +36,6 @@ void View::translation(){
         ,verticalScrollBar()->value()
         ,viewport()->width()
         ,viewport()->height());
-    if (!widget()->rect().contains(rect)){
-        rect.setX(widget()->width() - viewport()->width());
-        rect.setY(widget()->height() - viewport()->height());
-    }
     emit viewportChanged(rect);
 }
 

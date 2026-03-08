@@ -9,6 +9,7 @@
 #include <QSharedPointer>
 #include <QWidget>
 #include <QBoxLayout>
+#include <QScrollBar>
 
 #include "Viewport.h"
 #include "View.h"

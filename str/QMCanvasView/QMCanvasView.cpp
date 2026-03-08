@@ -37,7 +37,10 @@ void QMCanvasView::setCanvasScene(QMCanvasScene* scene) {
         view_.widget()->resize(0,0);
         connect(&view_,&View::viewportChanged,scene,&QMCanvasScene::onViewportChanged);
         connect(&view_,&View::scaleFactorChanged,scene,&QMCanvasScene::onScaleBy);
-        connect(this,&QMCanvasView::canvasSceneChanged,scene,&QMCanvasScene::viewportPixmapChanged);
+        connect(this,&QMCanvasView::canvasSceneChanged,&viewport_,&Viewport::onSceneChanged);
+        connect(scene,&QMCanvasScene::viewPropertyChanged,&view_,&View::onPropertyChanged);
+        connect(view_.horizontalScrollBar(),&QScrollBar::valueChanged,scene,&QMCanvasScene::onScrollBarChanged);
+        connect(view_.verticalScrollBar(),&QScrollBar::valueChanged,scene,&QMCanvasScene::onScrollBarChanged);
         connect(scene,&QMCanvasScene::viewPropertyChanged,&view_,&View::onPropertyChanged);
         emit canvasSceneChanged(scene);
     }

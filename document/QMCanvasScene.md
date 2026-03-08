@@ -126,7 +126,7 @@
 ***
 
 ### `void viewportRectChanged()`
-视口矩形变化时发送信号（由 onViewportChanged 和 onScaleBy 触发）
+视口矩形变化时发送信号
 ***
 
 ### `void viewportPixmapChanged()`

@@ -42,12 +42,24 @@ QPixmap QMCanvasScene::getViewportPixmap(){
     qreal w = viewportRect_.width() * extraViewportMargin();
     qreal h = viewportRect_.height() * extraViewportMargin();
 
+    if (w * ratio() >= pixmap_.width() * ratio()){
+        QPixmap viewportPixmap = pixmap()
+            .scaledToHeight(h*ratio(), Qt::FastTransformation);
+        return viewportPixmap;
+    }
+    if (h * ratio() >= pixmap_.height() * ratio()){
+        QPixmap viewportPixmap = pixmap()
+            .scaledToWidth(w*ratio(), Qt::FastTransformation);
+        return viewportPixmap;
+    }
+
     x = x - (w - viewportRect_.width()) / 2;
     y = y - (h - viewportRect_.height()) / 2;
 
     QRectF rect(x,y,w,h);
 
-    QPixmap viewportPixmap = pixmap().copy(rect.toRect()).scaled(w*ratio(),h*ratio());
+    QPixmap viewportPixmap = pixmap().copy(rect.toRect())
+        .scaled(w*ratio(),h*ratio(),Qt::KeepAspectRatio, Qt::FastTransformation);
     return viewportPixmap;
 }
 
@@ -83,7 +95,10 @@ QRect QMCanvasScene::getViewportRect(){
 }
 
 void QMCanvasScene::updatePixmap(QPainter* painter){
-    painter->drawPixmap(getViewportRect(),getViewportPixmap());
+    QRect rect = getViewportRect();
+    rect.setX(0);
+    rect.setY(0);
+    painter->drawPixmap(rect,getViewportPixmap());
 }
 
 void QMCanvasScene::draw(QPainter* painter){
@@ -159,6 +174,13 @@ void QMCanvasScene::onScaleBy(bool magnify, QPoint point){
     }else{
         setRatio(ratio()/factor());
     }
+    qreal x = viewportRect_.x() * ratio();
+    qreal y = viewportRect_.y() * ratio();
+    qreal w = viewportRect_.width() * ratio() * extraViewportMargin();
+    qreal h = viewportRect_.height() * ratio() * extraViewportMargin();
+
+    emit viewPropertyChanged(QPoint(x,y),QSize(w,h));
+
     /*
      *
      *
@@ -185,4 +207,9 @@ void QMCanvasScene::onMouseRelease(QPoint point){
     activeDrawObject()->end(point);
     addGraphic(activeDrawObject());
     activeDrawObject_=nullptr;
+}
+
+void QMCanvasScene::onScrollBarChanged(){
+    emit viewportRectChanged();
+    emit viewportPixmapChanged();
 }
