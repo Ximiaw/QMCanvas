@@ -7,6 +7,8 @@
 
 #include <QObject>
 #include <QSharedPointer>
+#include <QWidget>
+#include <QBoxLayout>
 
 #include "Viewport.h"
 #include "View.h"

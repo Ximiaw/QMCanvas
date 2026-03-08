@@ -16,7 +16,7 @@
 
 class QMCanvasScene;
 
-class Viewport :public QOpenGLWidget{
+class Viewport :public QWidget{
     Q_OBJECT
 private:
     QPointer<QMCanvasScene> scenePointer_;

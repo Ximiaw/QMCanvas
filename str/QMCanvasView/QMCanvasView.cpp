@@ -9,6 +9,10 @@ QMCanvasView::QMCanvasView(QWidget* parent):
     view_.setParent(this);
     viewport_.setParent(view_.widget());
     connect(this,&QMCanvasView::canvasSceneChanged,&viewport_,&Viewport::onSceneChanged);
+
+    QVBoxLayout* vl = new QVBoxLayout(this);
+    setLayout(vl);
+    vl->addWidget(&view_);
 }
 
 QMCanvasView::QMCanvasView(QMCanvasScene *scene, QWidget *parent) :

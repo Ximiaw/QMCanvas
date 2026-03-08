@@ -3,9 +3,10 @@
 //
 
 #include "Viewport.h"
+#include "QMCanvasScene.h"
 
 Viewport::Viewport(QWidget* parent):
-    QOpenGLWidget(parent){
+    QWidget(parent){
     setAutoFillBackground(false);
     setMouseTracking(true);
 }
@@ -51,19 +52,19 @@ void Viewport::mouseMoveEvent(QMouseEvent* event){
     QWidget* widget=qobject_cast<QWidget*>(parent());
     if (widget && event->button()==Qt::LeftButton)
         emit mouseMove(widget->mapFromGlobal(QCursor::pos()));
-    QOpenGLWidget::mouseMoveEvent(event);
+    QWidget::mouseMoveEvent(event);
 }
 
 void Viewport::mouseReleaseEvent(QMouseEvent* event){
     QWidget* widget=qobject_cast<QWidget*>(parent());
     if (widget && event->buttons()&Qt::LeftButton)
         emit mouseRelease(widget->mapFromGlobal(QCursor::pos()));
-    QOpenGLWidget::mouseReleaseEvent(event);
+    QWidget::mouseReleaseEvent(event);
 }
 
 void Viewport::mousePressEvent(QMouseEvent* event){
     QWidget* widget=qobject_cast<QWidget*>(parent());
     if (widget && event->button()==Qt::LeftButton)
         emit mousePress(widget->mapFromGlobal(QCursor::pos()));
-    QOpenGLWidget::mousePressEvent(event);
+    QWidget::mousePressEvent(event);
 }
