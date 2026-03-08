@@ -7,6 +7,8 @@
 
 #include <QObject>
 #include <QtCore>
+#include <QPoint>
+#include <QSize>
 #include <QRectF>
 #include <QWidget>
 #include <QScrollArea>
@@ -38,6 +40,8 @@ protected:
 private:
     void translation();
     void factor(QWheelEvent *event);
+public slots:
+    void onPropertyChanged(QPoint point,QSize size);
 signals:
     void viewportChanged(QRectF rect);
     void scaleFactorChanged(bool magnify,QPoint point);

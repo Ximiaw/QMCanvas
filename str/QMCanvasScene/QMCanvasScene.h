@@ -21,13 +21,11 @@ private:
     QMDrawObject* activeDrawObject_=nullptr;//当前活动的绘图对象，按下鼠标左键开始记录点，释放结束并放入列表
     QPixmap pixmap_;
     QRectF viewportRect_;//未缩放未外扩的viewport区域
-    QPixmap viewportPixmap_;//未缩放未外扩的viewport区域
     qreal factor_=1.0;//每次缩放倍率，和viewportRate相乘
     qreal ratio_=1.0;//当前图像倍率，如1.2为原图的1.2倍
     qreal marginRate_=1.0;//当前外扩倍率，1为默认值
 public:
-    QMCanvasScene(QObject* parent=nullptr);
-    QMCanvasScene(QPixmap pixmap,QObject* parent);
+    QMCanvasScene(QPixmap pixmap=QPixmap(200,200),QObject* parent=nullptr);
     ~QMCanvasScene() override = default;
 
     const QList<QMDrawObject*> graphicList() const;
@@ -54,17 +52,19 @@ public:
 
     QMDrawObject* activeDrawObject() const;
     void setActiveDrawObject(QMDrawObject* object);//会delete旧的活跃绘图对象
+
+private:
+    void inform();//通知所有信号发送
 public slots:
     void onViewportChanged(QRectF rect);//需要在这里处理外扩
     void onScaleBy(bool magnify,QPoint point);
     void onMouseMove(QPoint point);
     void onMouseRelease(QPoint point);
     void onMousePress(QPoint point);
-
 signals:
     void viewportRectChanged();//onViewportChanged和onScaleBy触发
     void viewportPixmapChanged();
-
+    void viewPropertyChanged(QPoint point,QSize size);//通知view更新滚动条和缩放
 };
 
 

@@ -12,16 +12,16 @@
 #include "View.h"
 #include "QMCanvasScene.h"
 
-class QMCanvasView : public QObject{
+class QMCanvasView : public QWidget{
     Q_OBJECT
     Q_ENUM(WheelMode)
-    Q_PROPERTY(WheelMode wheelMode READ wheelMode WRITE setWheelMode NOTIFY wheelModeChanged)
+    Q_PROPERTY(WheelMode wheelMode READ wheelMode WRITE setWheelMode)
     Q_PROPERTY(const Viewport* viewport READ viewport)
     Q_PROPERTY(QMCanvasScene* canvasScene READ canvasScene WRITE setCanvasScene NOTIFY canvasSceneChanged)
 
 public:
-    QMCanvasView(QObject* parent=nullptr);
-    QMCanvasView(QMCanvasScene* scene,QObject* parent=nullptr);
+    QMCanvasView(QWidget* parent=nullptr);
+    QMCanvasView(QMCanvasScene* scene,QWidget* parent=nullptr);
 
 private:
     View view_;

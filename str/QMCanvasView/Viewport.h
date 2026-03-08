@@ -14,7 +14,7 @@
 #include <QMouseEvent>
 #include <QCursor>
 
-#include "QMCanvasScene.h"
+class QMCanvasScene;
 
 class Viewport :public QOpenGLWidget{
     Q_OBJECT

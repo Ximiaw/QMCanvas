@@ -49,3 +49,9 @@ void View::factor(QWheelEvent *event) {
     if (numSteps.y()>=1 || numSteps.y()<=-1)
         emit scaleFactorChanged(numSteps.y()>0,widget()->mapFromGlobal(QCursor::pos()));
 }
+
+void View::onPropertyChanged(QPoint point,QSize size){
+    horizontalScrollBar()->setValue(point.x());
+    verticalScrollBar()->setValue(point.y());
+    widget()->resize(size);
+}

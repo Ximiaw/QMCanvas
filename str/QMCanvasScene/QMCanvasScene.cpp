@@ -4,13 +4,9 @@
 
 #include "QMCanvasScene.h"
 
-QMCanvasScene::QMCanvasScene(QObject* parent)
-    :QObject(parent){}
-
 QMCanvasScene::QMCanvasScene(QPixmap pixmap,QObject* parent)
-    :QMCanvasScene(parent){
+    :QObject(parent){
     setPixmap(pixmap);
-    viewportRect_=pixmap.rect();
 }
 
 const QList<QMDrawObject*> QMCanvasScene::graphicList() const{
@@ -33,7 +29,7 @@ bool QMCanvasScene::deleteGraphic(QMDrawObject* graphic){
 void QMCanvasScene::setPixmap(QPixmap& pixmap){
     viewportRect_=pixmap.rect();
     pixmap_ = pixmap;
-    emit viewportPixmapChanged();
+    setRatio(1.0);//这个函数会触发更新
 }
 
 const QPixmap& QMCanvasScene::pixmap() const{
@@ -68,11 +64,20 @@ QRect QMCanvasScene::getViewportRect(){
 
     qreal qw = pixmap().width() * ratio();
     qreal qh = pixmap().height() * ratio();
+
+    if (w > pixmap_.width()) w = pixmap_.width();
+    else if (w < 0) w = 0;
+    if (h > pixmap_.height()) h = pixmap_.height();
+    else if (h < 0) h = 0;
     if (qw < x + w){
         rect.setX(qw - w);
+    }else if (x + w < 0){
+        rect.setX(0);
     }
     if (qh < y + h){
         rect.setY(qh - h);
+    }else if (y + h < 0){
+        rect.setY(0);
     }
     return rect.toRect();
 }
@@ -107,8 +112,7 @@ qreal QMCanvasScene::extraViewportMargin() const{
 
 void QMCanvasScene::setExtraViewportMargin(qreal rate){
     marginRate_ = rate;
-    emit viewportRectChanged();
-    emit viewportPixmapChanged();
+    inform();
 }
 
 qreal QMCanvasScene::ratio() const{
@@ -117,8 +121,7 @@ qreal QMCanvasScene::ratio() const{
 
 void QMCanvasScene::setRatio(qreal ratio){
     ratio_=ratio;
-    emit viewportRectChanged();
-    emit viewportPixmapChanged();
+    inform();
 }
 
 QMDrawObject* QMCanvasScene::activeDrawObject() const{
@@ -134,10 +137,20 @@ void QMCanvasScene::setActiveDrawObject(QMDrawObject* object){
     object->setParent(this);
 }
 
-void QMCanvasScene::onViewportChanged(QRectF rect){
-    viewportRect_=rect;
+void QMCanvasScene::inform(){
     emit viewportRectChanged();
     emit viewportPixmapChanged();
+
+    qreal x = viewportRect_.x() * ratio();
+    qreal y = viewportRect_.y() * ratio();
+    qreal pix_w = pixmap_.width() * ratio();
+    qreal pix_h = pixmap_.height() * ratio();
+    emit viewPropertyChanged(QPoint(x,y),QSize(pix_w,pix_h));
+}
+
+void QMCanvasScene::onViewportChanged(QRectF rect){
+    viewportRect_=rect;
+    inform();
 }
 
 void QMCanvasScene::onScaleBy(bool magnify, QPoint point){
@@ -154,8 +167,7 @@ void QMCanvasScene::onScaleBy(bool magnify, QPoint point){
      *
      *
     */
-    emit viewportRectChanged();
-    emit viewportPixmapChanged();
+    inform();
 }
 
 void QMCanvasScene::onMouseMove(QPoint point){
@@ -174,5 +186,3 @@ void QMCanvasScene::onMouseRelease(QPoint point){
     addGraphic(activeDrawObject());
     activeDrawObject_=nullptr;
 }
-
-//发送信号改View里bar的值

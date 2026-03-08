@@ -14,7 +14,9 @@ qt_add_library(QMCanvas STATIC
 
 target_link_libraries(QMCanvas PRIVATE
         Qt::Core
+        Qt::Gui
         Qt::Widgets
+        Qt::OpenGLWidgets
 )
 
 target_include_directories(QMCanvas PUBLIC

@@ -4,13 +4,14 @@
 
 #include "QMCanvasView.h"
 
-QMCanvasView::QMCanvasView(QObject* parent):
-    QObject(parent){
+QMCanvasView::QMCanvasView(QWidget* parent):
+    QWidget(parent){
+    view_.setParent(this);
     viewport_.setParent(view_.widget());
     connect(this,&QMCanvasView::canvasSceneChanged,&viewport_,&Viewport::onSceneChanged);
 }
 
-QMCanvasView::QMCanvasView(QMCanvasScene *scene, QObject *parent) :
+QMCanvasView::QMCanvasView(QMCanvasScene *scene, QWidget *parent) :
     QMCanvasView(parent){
     setCanvasScene(scene);
 }
@@ -33,6 +34,7 @@ void QMCanvasView::setCanvasScene(QMCanvasScene* scene) {
         connect(&view_,&View::viewportChanged,scene,&QMCanvasScene::onViewportChanged);
         connect(&view_,&View::scaleFactorChanged,scene,&QMCanvasScene::onScaleBy);
         connect(this,&QMCanvasView::canvasSceneChanged,scene,&QMCanvasScene::viewportPixmapChanged);
+        connect(scene,&QMCanvasScene::viewPropertyChanged,&view_,&View::onPropertyChanged);
         emit canvasSceneChanged(scene);
     }
 }

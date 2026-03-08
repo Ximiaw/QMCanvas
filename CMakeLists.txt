@@ -13,6 +13,7 @@ find_package(Qt6 COMPONENTS
         Core
         Gui
         Widgets
+        OpenGLWidgets
         REQUIRED)
 
 include_directories(str/QMCanvasView)
@@ -24,9 +25,11 @@ add_executable(Main
 )
 
 target_link_libraries(Main PRIVATE
-        Qt::Core
-        Qt::Widgets
         QMCanvas
+        Qt::Core
+        Qt::Gui
+        Qt::Widgets
+        Qt::OpenGLWidgets
 )
 
 if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
