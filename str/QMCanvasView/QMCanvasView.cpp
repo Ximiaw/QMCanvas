@@ -63,8 +63,16 @@ bool QMCanvasView::eventFilter(QObject* watched, QEvent* event){
         QScrollBar *vBar = view_.verticalScrollBar();
         QScrollBar *hBar = view_.horizontalScrollBar();
 
-        if (watched == vBar) emit vBarChanged(vBar->value());
-        if (watched == hBar) emit hBarChanged(hBar->value());
+        if (watched == vBar) {
+            QMetaObject::invokeMethod(this, [this, vBar]() {
+                emit vBarChanged(vBar->value());
+            }, Qt::QueuedConnection);
+        }
+        else if (watched == hBar) {
+            QMetaObject::invokeMethod(this, [this, hBar]() {
+                emit hBarChanged(hBar->value());
+            }, Qt::QueuedConnection);
+        }
     }
 
     return QWidget::eventFilter(watched, event);

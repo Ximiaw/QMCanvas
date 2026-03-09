@@ -17,6 +17,7 @@ void Viewport::paintEvent(QPaintEvent* event){
     QPainter painter(this);
     scenePointer_.get()->updatePixmap(&painter);
     scenePointer_.get()->draw(&painter);
+    painter.end();
 }
 
 void Viewport::onSceneChanged(QMCanvasScene* scene){
@@ -42,6 +43,7 @@ void Viewport::onRectChanged(){
 }
 
 void Viewport::onPixmapChanged(){
+    if (scenePointer_.isNull()) return;
     update();
 }
 
