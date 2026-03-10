@@ -39,12 +39,11 @@ public:
     const Viewport* viewport() const;
 
 protected:
-    bool eventFilter(QObject* watched, QEvent* event) override;
+    void resizeEvent(QResizeEvent* event) override;
 
 signals:
     void canvasSceneChanged(QMCanvasScene* scene);
-    void hBarChanged(int value);
-    void vBarChanged(int value);
+    void sizeChanged();
 };
 
 

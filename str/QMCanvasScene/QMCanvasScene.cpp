@@ -3,6 +3,9 @@
 //
 
 #include "QMCanvasScene.h"
+#include "QMCanvasView.h"
+#include "Viewport.h"
+#include "View.h"
 
 QMCanvasScene::QMCanvasScene(QPixmap pixmap,QObject* parent)
     :QObject(parent){
@@ -101,6 +104,23 @@ void QMCanvasScene::draw(QPainter* painter){
     }
 }
 
+void QMCanvasScene::init(QMCanvasView* canvasView,View* view,Viewport* viewport){
+    connect(viewport,&Viewport::mouseMove,this,&QMCanvasScene::onMouseMove);
+    connect(viewport,&Viewport::mouseRelease,this,&QMCanvasScene::onMouseRelease);
+    connect(viewport,&Viewport::mousePress,this,&QMCanvasScene::onMousePress);
+    connect(this,&QMCanvasScene::viewportRectChanged,viewport,&Viewport::onRectChanged);
+    connect(this,&QMCanvasScene::viewportPixmapChanged,viewport,&Viewport::onPixmapChanged);
+
+    connect(view,&View::viewportChanged,this,&QMCanvasScene::onViewportChanged);
+    connect(view,&View::scaleFactorChanged,this,&QMCanvasScene::onScaleBy);
+    connect(view->horizontalScrollBar(),&QScrollBar::valueChanged,this,&QMCanvasScene::onHScrollBarChanged);
+    connect(view->verticalScrollBar(),&QScrollBar::valueChanged,this,&QMCanvasScene::onVScrollBarChanged);
+    connect(this,&QMCanvasScene::viewPropertyChanged,view,&View::onPropertyChanged);
+
+    connect(canvasView,&QMCanvasView::canvasSceneChanged,viewport,&Viewport::onSceneChanged);
+    connect(canvasView,&QMCanvasView::sizeChanged,this,&QMCanvasScene::onSizeChanged);
+}
+
 qreal QMCanvasScene::factor() const{
     return factor_;
 }
@@ -178,6 +198,10 @@ void QMCanvasScene::onScaleBy(bool magnify, QPoint point){
      *
      *
     */
+    inform();
+}
+
+void QMCanvasScene::onSizeChanged(){
     inform();
 }
 

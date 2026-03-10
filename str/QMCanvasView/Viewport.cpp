@@ -25,10 +25,6 @@ void Viewport::onSceneChanged(QMCanvasScene* scene){
         if (!scenePointer_.isNull())
             disconnect(scenePointer_.get());
         scenePointer_ = QPointer<QMCanvasScene>(scene);
-        connect(this,&Viewport::mouseMove,scene,&QMCanvasScene::onMouseMove);
-        connect(this,&Viewport::mouseRelease,scene,&QMCanvasScene::onMouseRelease);
-        connect(this,&Viewport::mousePress,scene,&QMCanvasScene::onMousePress);
-        connect(scene,&QMCanvasScene::viewportRectChanged,this,&Viewport::onRectChanged);
         onRectChanged();
     }
 }

@@ -12,7 +12,10 @@
 #include <QPixmap>
 
 #include "QMDrawObject.h"
-#include "Viewport.h"
+
+class QMCanvasView;
+class View;
+class Viewport;
 
 class QMCanvasScene : public QObject {
     Q_OBJECT
@@ -41,6 +44,8 @@ public:
     void updatePixmap(QPainter* painter);
     void draw(QPainter* painter);
 
+    void init(QMCanvasView* canvasView,View* view,Viewport* viewport);
+
     qreal factor() const;
     void setFactor(qreal factor);
 
@@ -58,6 +63,7 @@ private:
 public slots:
     void onViewportChanged(QRectF rect);//需要在这里处理外扩
     void onScaleBy(bool magnify,QPoint point);
+    void onSizeChanged();
     void onMouseMove(QPoint point);
     void onMouseRelease(QPoint point);
     void onMousePress(QPoint point);

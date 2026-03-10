@@ -8,18 +8,21 @@ QMCanvasView::QMCanvasView(QWidget* parent):
     QWidget(parent){
     view_.setParent(this);
     viewport_.setParent(view_.widget());
+
+    QVBoxLayout* vl = new QVBoxLayout(this);
+    setLayout(vl);
+    vl->addWidget(&view_);
+}
+
+QMCanvasView::QMCanvasView(QMCanvasScene *scene, QWidget *parent) :
+    QWidget(parent){
+    view_.setParent(this);
+    viewport_.setParent(view_.widget());
     connect(this,&QMCanvasView::canvasSceneChanged,&viewport_,&Viewport::onSceneChanged);
 
     QVBoxLayout* vl = new QVBoxLayout(this);
     setLayout(vl);
     vl->addWidget(&view_);
-
-    view_.horizontalScrollBar()->installEventFilter(this);
-    view_.verticalScrollBar()->installEventFilter(this);
-}
-
-QMCanvasView::QMCanvasView(QMCanvasScene *scene, QWidget *parent) :
-    QMCanvasView(parent){
     setCanvasScene(scene);
 }
 
@@ -35,16 +38,11 @@ WheelMode QMCanvasView::wheelMode() const {
 
 void QMCanvasView::setCanvasScene(QMCanvasScene* scene) {
     if (scenePointer_.get()!=scene) {
-        disconnect(scenePointer_.get());
+        if (!scenePointer_.isNull())
+            disconnect(scenePointer_.get());
         scenePointer_.reset(scene);
         view_.widget()->resize(0,0);
-        connect(&view_,&View::viewportChanged,scene,&QMCanvasScene::onViewportChanged);
-        connect(&view_,&View::scaleFactorChanged,scene,&QMCanvasScene::onScaleBy);
-        connect(this,&QMCanvasView::canvasSceneChanged,&viewport_,&Viewport::onSceneChanged);
-        connect(this,&QMCanvasView::hBarChanged,scene,&QMCanvasScene::onHScrollBarChanged);
-        connect(this,&QMCanvasView::vBarChanged,scene,&QMCanvasScene::onVScrollBarChanged);
-        connect(scene,&QMCanvasScene::viewportPixmapChanged,&viewport_,&Viewport::onPixmapChanged);
-        connect(scene,&QMCanvasScene::viewPropertyChanged,&view_,&View::onPropertyChanged);
+        scene->init(this,&view_,&viewport_);
 
         emit canvasSceneChanged(scene);
     }
@@ -58,22 +56,7 @@ const Viewport* QMCanvasView::viewport() const {
     return &viewport_;
 }
 
-bool QMCanvasView::eventFilter(QObject* watched, QEvent* event){
-    if (event->type() == QEvent::Wheel) {
-        QScrollBar *vBar = view_.verticalScrollBar();
-        QScrollBar *hBar = view_.horizontalScrollBar();
-
-        if (watched == vBar) {
-            QMetaObject::invokeMethod(this, [this, vBar]() {
-                emit vBarChanged(vBar->value());
-            }, Qt::QueuedConnection);
-        }
-        else if (watched == hBar) {
-            QMetaObject::invokeMethod(this, [this, hBar]() {
-                emit hBarChanged(hBar->value());
-            }, Qt::QueuedConnection);
-        }
-    }
-
-    return QWidget::eventFilter(watched, event);
+void QMCanvasView::resizeEvent(QResizeEvent* event){
+    QWidget::resizeEvent(event);
+    emit sizeChanged();
 }
