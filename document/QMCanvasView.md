@@ -1,8 +1,21 @@
 # QMCanvasView
 ***
 
+画布视图容器类，继承自 `QWidget`。整合 View 和 Viewport，提供统一的画布操作接口。
+
+## 属性
+
+| 属性名 | 类型 | 说明 |
+|--------|------|------|
+| `wheelMode` | WheelMode | 滚轮模式，可读可写 |
+| `viewport` | const Viewport* | 视口指针，只读 |
+| `canvasScene` | QMCanvasScene* | 场景指针，可读可写，变化时发送信号 |
+
+## 构造函数
+
 ### `QMCanvasView(QWidget* parent=nullptr)`
-初始化画布视图对象，parent 为父窗口指针
+初始化画布视图对象，创建内部 View 和 Viewport 并设置布局  
+*parent* — 父窗口指针
 ***
 
 ### `QMCanvasView(QMCanvasScene* scene, QWidget* parent=nullptr)`
@@ -10,6 +23,8 @@
 *scene* — 要关联的场景对象指针  
 *parent* — 父窗口指针
 ***
+
+## 公共方法
 
 ### `void setWheelMode(WheelMode mode)`
 设置滚轮模式，控制滚轮事件的行为（滚动或缩放）  
@@ -22,7 +37,7 @@
 ***
 
 ### `void setCanvasScene(QMCanvasScene* scene)`
-设置渲染场景，视图将显示该场景中的内容  
+设置渲染场景，视图将显示该场景中的内容。会调用 scene->init() 建立信号槽连接  
 *scene* — 要关联的场景对象指针
 ***
 
@@ -36,10 +51,20 @@
 **Returns** — 视口对象指针
 ***
 
-## signals
+## 保护方法
+
+### `void resizeEvent(QResizeEvent* event) override`
+重写大小变化事件，发送 sizeChanged 信号通知场景更新  
+*event* — 大小变化事件对象
 ***
+
+## 信号
 
 ### `void canvasSceneChanged(QMCanvasScene* scene)`
 修改场景时发送信号  
 *scene* — 新的场景对象指针
+***
+
+### `void sizeChanged()`
+视图大小变化时发送信号
 ***

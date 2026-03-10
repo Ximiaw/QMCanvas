@@ -1,6 +1,10 @@
 # View
 ***
 
+滚动视图容器类，继承自 `QScrollArea`，处理滚轮事件和视口变化通知。
+
+## 构造函数
+
 ### `View(QWidget* parent=nullptr)`
 初始化视图对象，parent 为父窗口指针
 ***
@@ -8,6 +12,8 @@
 ### `~View()`
 析构函数
 ***
+
+## 公共方法
 
 ### `void setWheelMode(WheelMode mode)`
 设置滚轮模式，控制滚轮事件的行为（滚动或缩放）  
@@ -19,16 +25,14 @@
 **Returns** — 当前滚轮模式
 ***
 
-## protected
-***
+## 保护方法
 
 ### `void wheelEvent(QWheelEvent *event) override`
 重写滚轮事件处理，根据当前 wheelMode 决定执行平移或缩放操作  
 *event* — 滚轮事件对象
 ***
 
-## private
-***
+## 私有方法
 
 ### `void translation()`
 处理视图平移，计算当前视口矩形并发送 viewportChanged 信号
@@ -39,8 +43,7 @@
 *event* — 滚轮事件对象，用于获取滚轮旋转角度
 ***
 
-## public slots
-***
+## 公共槽函数
 
 ### `void onPropertyChanged(QPoint point, QSize size)`
 响应属性变化，更新滚动条位置和视图部件大小  
@@ -48,8 +51,7 @@
 *size* — 新的视图大小
 ***
 
-## signals
-***
+## 信号
 
 ### `void viewportChanged(QRectF rect)`
 视口区域变化时发送信号  

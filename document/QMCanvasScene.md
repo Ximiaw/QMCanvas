@@ -1,11 +1,21 @@
 # QMCanvasScene
 ***
 
+场景管理器类，继承自 `QObject`。负责管理绘制对象列表、处理坐标变换、维护视口状态和位图缓存。
+
+## 构造函数
+
 ### `QMCanvasScene(QPixmap pixmap=QPixmap(200,200), QObject* parent=nullptr)`
 初始化场景对象  
 *pixmap* — 初始位图，默认为 200x200 的空白位图  
 *parent* — 父对象指针
 ***
+
+### `~QMCanvasScene()`
+默认析构函数
+***
+
+## 公共方法
 
 ### `const QList<QMDrawObject*> graphicList() const`
 获取当前场景中的所有绘制对象列表  
@@ -13,7 +23,7 @@
 ***
 
 ### `void addGraphic(QMDrawObject* graphic)`
-向场景中添加绘制对象，scene 将接管该对象的生命周期管理  
+向场景中添加绘制对象，scene 将接管该对象的生命周期管理（设置父对象）  
 *graphic* — 要添加的绘制对象指针
 ***
 
@@ -24,7 +34,7 @@
 ***
 
 ### `void setPixmap(QPixmap& pixmap)`
-设置场景的底图  
+设置场景的底图，同时重置视口矩形和显示倍率  
 *pixmap* — 新的位图
 ***
 
@@ -44,13 +54,20 @@
 ***
 
 ### `void updatePixmap(QPainter* painter)`
-更新位图缓存，在需要重新渲染时调用  
+更新位图缓存，将视口位图绘制到 painter 上  
 *painter* — QPainter 绘制对象
 ***
 
 ### `void draw(QPainter* painter)`
 执行绘制操作，将所有绘制对象绘制到 painter 上  
 *painter* — QPainter 绘制对象
+***
+
+### `void init(QMCanvasView* canvasView, View* view, Viewport* viewport)`
+初始化场景的信号槽连接，建立与 View、Viewport、QMCanvasView 的通信  
+*canvasView* — 画布视图指针  
+*view* — 滚动视图指针  
+*viewport* — 视口指针
 ***
 
 ### `qreal factor() const`
@@ -79,7 +96,7 @@
 ***
 
 ### `void setRatio(qreal ratio)`
-设置当前图像显示倍率  
+设置当前图像显示倍率，会触发 inform() 更新视图  
 *ratio* — 显示倍率
 ***
 
@@ -89,12 +106,17 @@
 ***
 
 ### `void setActiveDrawObject(QMDrawObject* object)`
-设置当前活动的绘图对象，会 delete 旧的活动绘图对象  
+设置当前活动的绘图对象，会 delete 旧的活动绘图对象并设置新的父对象  
 *object* — 新的活动绘图对象指针
 ***
 
-## public slots
+## 私有方法
+
+### `void inform()`
+通知所有信号发送，触发 viewportRectChanged、viewportPixmapChanged 和 viewPropertyChanged 信号
 ***
+
+## 公共槽函数
 
 ### `void onViewportChanged(QRectF rect)`
 视口几何变化时调用，内部更新可见性判断区域并处理外扩  
@@ -102,18 +124,22 @@
 ***
 
 ### `void onScaleBy(bool magnify, QPoint point)`
-相对缩放时调用，用于执行缩放操作  
+相对缩放时调用，根据 magnify 执行放大或缩小操作  
 *magnify* — 缩放判断，true 表示放大，false 表示缩小  
-*point* — 缩放中心点
+*point* — 缩放中心点（当前未完全实现光标偏移处理）
+***
+
+### `void onSizeChanged()`
+视图大小变化时调用，触发 inform() 更新视图属性
 ***
 
 ### `void onMouseMove(QPoint point)`
-鼠标移动时调用，转发给活动绘图对象  
+鼠标移动时调用，转发给活动绘图对象的 recordPoint()  
 *point* — 鼠标当前位置
 ***
 
 ### `void onMouseRelease(QPoint point)`
-鼠标释放时调用，结束当前绘制操作  
+鼠标释放时调用，结束当前绘制操作并将活动对象添加到列表  
 *point* — 鼠标释放位置
 ***
 
@@ -122,11 +148,20 @@
 *point* — 鼠标按下位置
 ***
 
-## signals
+### `void onHScrollBarChanged(int value)`
+水平滚动条值变化时调用，更新视口矩形 X 坐标  
+*value* — 滚动条当前值
 ***
 
+### `void onVScrollBarChanged(int value)`
+垂直滚动条值变化时调用，更新视口矩形 Y 坐标  
+*value* — 滚动条当前值
+***
+
+## 信号
+
 ### `void viewportRectChanged()`
-视口矩形变化时发送信号
+视口矩形变化时发送信号（由 onViewportChanged、onScaleBy 和滚动条变化触发）
 ***
 
 ### `void viewportPixmapChanged()`
