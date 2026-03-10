@@ -43,7 +43,7 @@ protected:
 
 signals:
     void canvasSceneChanged(QMCanvasScene* scene);
-    void sizeChanged();
+    void sizeChanged(QSize size);
 };
 
 

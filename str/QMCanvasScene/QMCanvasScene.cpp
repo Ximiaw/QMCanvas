@@ -69,9 +69,9 @@ QRect QMCanvasScene::getViewportRect(){
     qreal qw = pixmap().width() * ratio();
     qreal qh = pixmap().height() * ratio();
 
-    if (w > qw) w = pixmap_.width();
+    if (w > qw) w = qw;
     else if (w < 0) w = 0;
-    if (h > qh) h = pixmap_.height();
+    if (h > qh) h = qh;
     else if (h < 0) h = 0;
     if (qw < x + w){
         rect.setX(qw - w);
@@ -183,13 +183,6 @@ void QMCanvasScene::onScaleBy(bool magnify, QPoint point){
     }else{
         setRatio(ratio()/factor());
     }
-    qreal x = viewportRect_.x() * ratio();
-    qreal y = viewportRect_.y() * ratio();
-    qreal w = viewportRect_.width() * ratio() * extraViewportMargin();
-    qreal h = viewportRect_.height() * ratio() * extraViewportMargin();
-
-    emit viewPropertyChanged(QPoint(x,y),QSize(w,h));
-
     /*
      *
      *
@@ -198,10 +191,9 @@ void QMCanvasScene::onScaleBy(bool magnify, QPoint point){
      *
      *
     */
-    inform();
 }
 
-void QMCanvasScene::onSizeChanged(){
+void QMCanvasScene::onSizeChanged(QSize size){
     inform();
 }
 

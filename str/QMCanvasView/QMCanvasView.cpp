@@ -58,5 +58,5 @@ const Viewport* QMCanvasView::viewport() const {
 
 void QMCanvasView::resizeEvent(QResizeEvent* event){
     QWidget::resizeEvent(event);
-    emit sizeChanged();
+    emit sizeChanged(viewport()->size());
 }

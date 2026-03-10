@@ -63,7 +63,7 @@ private:
 public slots:
     void onViewportChanged(QRectF rect);//需要在这里处理外扩
     void onScaleBy(bool magnify,QPoint point);
-    void onSizeChanged();
+    void onSizeChanged(QSize size);
     void onMouseMove(QPoint point);
     void onMouseRelease(QPoint point);
     void onMousePress(QPoint point);
