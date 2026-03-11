@@ -30,7 +30,6 @@ bool QMCanvasScene::deleteGraphic(QMDrawObject* graphic){
 }
 
 void QMCanvasScene::setPixmap(QPixmap& pixmap){
-    viewportRect_=pixmap.rect();
     pixmap_ = pixmap;
     setRatio(1.0);//这个函数会触发更新
 }
@@ -69,18 +68,14 @@ QRect QMCanvasScene::getViewportRect(){
     qreal qw = pixmap().width() * ratio();
     qreal qh = pixmap().height() * ratio();
 
-    if (w > qw) rect.setWidth(qw);
-    else if (w < 0) w = 0;
-    if (h > qh) rect.setHeight(qh);
-    else if (h < 0) h = 0;
     if (qw < rect.x() + rect.width()){
         rect.setX(qw - w);
-    }else if (rect.x() + rect.width() < 0){
+    }else if (rect.x() < 0){
         rect.setX(0);
     }
     if (qh < rect.y() + rect.height()){
         rect.setY(qh - h);
-    }else if (rect.y() + rect.height() < 0){
+    }else if (rect.y() < 0){
         rect.setY(0);
     }
     return rect.toRect();
@@ -105,6 +100,9 @@ void QMCanvasScene::draw(QPainter* painter){
 }
 
 void QMCanvasScene::init(QMCanvasView* canvasView,View* view,Viewport* viewport){
+    viewportRect_ = view->viewport()->rect();
+    view->widget()->resize(pixmap_.size());
+
     connect(viewport,&Viewport::mouseMove,this,&QMCanvasScene::onMouseMove);
     connect(viewport,&Viewport::mouseRelease,this,&QMCanvasScene::onMouseRelease);
     connect(viewport,&Viewport::mousePress,this,&QMCanvasScene::onMousePress);
@@ -215,15 +213,14 @@ void QMCanvasScene::onMouseRelease(QPoint point){
 }
 
 void QMCanvasScene::onHScrollBarChanged(int value){
-    viewportRect_.setX(value/ratio());
-    emit viewportRectChanged();
-    emit viewportPixmapChanged();
+    //不要问我为什么要新建一个QRectF，我也不知道为什么在原有的rect上改为什么会出bug
+    viewportRect_ = QRectF(value/ratio(),viewportRect_.y(),viewportRect_.width(),viewportRect_.height());
+    inform();
 }
 
 void QMCanvasScene::onVScrollBarChanged(int value){
-    viewportRect_.setY(value/ratio());
-    emit viewportRectChanged();
-    emit viewportPixmapChanged();
+    viewportRect_ = QRectF(viewportRect_.x(),value/ratio(),viewportRect_.width(),viewportRect_.height());
+    inform();
 }
 
 /*
