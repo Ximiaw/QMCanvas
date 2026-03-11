@@ -9,7 +9,7 @@ Viewport::Viewport(QWidget* parent):
     QWidget(parent){
     setAutoFillBackground(false);
     setMouseTracking(true);
-    setStyleSheet("background-color: white;");
+    setStyleSheet("background-color: red;");//测试用，方便观察，回头记得删
 }
 
 void Viewport::paintEvent(QPaintEvent* event){
@@ -45,7 +45,7 @@ void Viewport::onPixmapChanged(){
 
 void Viewport::mouseMoveEvent(QMouseEvent* event){
     QWidget* widget=qobject_cast<QWidget*>(parent());
-    if (widget && event->button()==Qt::LeftButton)
+    if (widget && event->buttons()&Qt::LeftButton)
         emit mouseMove(widget->mapFromGlobal(QCursor::pos()));
     QWidget::mouseMoveEvent(event);
 }
@@ -59,7 +59,7 @@ void Viewport::mouseReleaseEvent(QMouseEvent* event){
 
 void Viewport::mousePressEvent(QMouseEvent* event){
     QWidget* widget=qobject_cast<QWidget*>(parent());
-    if (widget && event->button()==Qt::LeftButton)
+    if (widget && event->buttons()&Qt::LeftButton)
         emit mousePress(widget->mapFromGlobal(QCursor::pos()));
     QWidget::mousePressEvent(event);
 }

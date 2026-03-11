@@ -28,7 +28,7 @@ private:
     qreal ratio_=1.0;//当前图像倍率，如1.2为原图的1.2倍
     qreal marginRate_=1.0;//当前外扩倍率，1为默认值
 public:
-    QMCanvasScene(QPixmap pixmap=QPixmap(200,200),QObject* parent=nullptr);
+    QMCanvasScene(QPixmap pixmap=QPixmap(500,500),QObject* parent=nullptr);
     ~QMCanvasScene() override = default;
 
     const QList<QMDrawObject*> graphicList() const;
@@ -63,7 +63,7 @@ private:
 public slots:
     void onViewportChanged(QRectF rect);//需要在这里处理外扩
     void onScaleBy(bool magnify,QPoint point);
-    void onSizeChanged(QSize size);
+    void onSizeChanged();
     void onMouseMove(QPoint point);
     void onMouseRelease(QPoint point);
     void onMousePress(QPoint point);

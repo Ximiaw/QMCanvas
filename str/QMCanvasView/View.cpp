@@ -47,7 +47,7 @@ void View::factor(QWheelEvent *event) {
 }
 
 void View::onPropertyChanged(QPoint point,QSize size){
+    widget()->resize(size);
     horizontalScrollBar()->setValue(point.x());
     verticalScrollBar()->setValue(point.y());
-    widget()->resize(size);
 }
