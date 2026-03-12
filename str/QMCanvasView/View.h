@@ -15,7 +15,6 @@
 #include <QScrollBar>
 #include <QWheelEvent>
 #include <QMetaObject>
-#include <QtOpenGLWidgets/QOpenGLWidget>
 
 enum class WheelMode {
     ROLL,
