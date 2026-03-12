@@ -29,7 +29,24 @@ bool QMCanvasScene::deleteGraphic(QMDrawObject* graphic){
     return true;
 }
 
+qreal QMCanvasScene::maxRatio() const{
+    return maxRatio_;
+}
+
+void QMCanvasScene::setMaxRatio(qreal max){
+    maxRatio_ = max;
+}
+
+qreal QMCanvasScene::minRatio() const{
+    return minRatio_;
+}
+
+void QMCanvasScene::setMinRatio(qreal min){
+    minRatio_ = min;
+}
+
 void QMCanvasScene::setPixmap(QPixmap& pixmap){
+    viewportRect_ = QRect(pixmap.rect());
     pixmap_ = pixmap;
     setRatio(1.0);//这个函数会触发更新
 }
@@ -100,8 +117,7 @@ void QMCanvasScene::draw(QPainter* painter){
 }
 
 void QMCanvasScene::init(QMCanvasView* canvasView,View* view,Viewport* viewport){
-    viewportRect_ = view->viewport()->rect();
-    view->widget()->resize(pixmap_.size());
+    view->widget()->setGeometry(pixmap_.rect());
 
     connect(viewport,&Viewport::mouseMove,this,&QMCanvasScene::onMouseMove);
     connect(viewport,&Viewport::mouseRelease,this,&QMCanvasScene::onMouseRelease);
@@ -176,19 +192,16 @@ void QMCanvasScene::onViewportChanged(QRectF rect){
 }
 
 void QMCanvasScene::onScaleBy(bool magnify, QPoint point){
+    mousePoint_ = QPoint(point.x()/ratio(),point.y()/ratio());
     if (magnify){
-        setRatio(ratio()*factor());
+        qreal r = ratio()*factor();
+        if (r>maxRatio()) r = maxRatio();
+        setRatio(r);
     }else{
-        setRatio(ratio()/factor());
+        qreal r = ratio()/factor();
+        if (r<minRatio()) r = minRatio();
+        setRatio(r);
     }
-    /*
-     *
-     *
-     *后续再处理光标的偏移
-     *注意传过来的光标位置需要转换为图片没有缩放的情况下的位置
-     *
-     *
-    */
 }
 
 void QMCanvasScene::onSizeChanged(){
@@ -213,7 +226,7 @@ void QMCanvasScene::onMouseRelease(QPoint point){
 }
 
 void QMCanvasScene::onHScrollBarChanged(int value){
-    //不要问我为什么要新建一个QRectF，我也不知道为什么在原有的rect上改为什么会出bug
+    //不要问我为什么要新建一个QRectF，我也不知道为什么在原有的rect上改会出bug
     viewportRect_ = QRectF(value/ratio(),viewportRect_.y(),viewportRect_.width(),viewportRect_.height());
     inform();
 }
@@ -222,11 +235,3 @@ void QMCanvasScene::onVScrollBarChanged(int value){
     viewportRect_ = QRectF(viewportRect_.x(),value/ratio(),viewportRect_.width(),viewportRect_.height());
     inform();
 }
-
-/*
- *
- *
- * 记得给最大和最小倍数上限制，不然内存会爆
- *
- *
- */

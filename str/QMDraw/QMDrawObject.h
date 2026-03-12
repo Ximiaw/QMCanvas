@@ -7,6 +7,8 @@
 
 #include <QObject>
 #include <QPainter>
+#include <QPen>
+#include <QBrush>
 
 class QMDrawObject : public QObject{
     Q_OBJECT
@@ -18,7 +20,9 @@ public:
     virtual void draw(QPainter* painter) = 0;
     virtual void begin(QPoint point) = 0;
     virtual void end(QPoint point) = 0;
-    virtual void recordPoint (QPoint point) = 0;//在begin前禁止记录点
+    virtual void recordPoint (QPoint point) = 0;//在begin前禁止记录点，需要手动禁止
+    virtual QPen* pen() const = 0;
+    virtual QBrush* brush() const = 0;
 };
 
 

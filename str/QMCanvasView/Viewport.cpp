@@ -52,14 +52,14 @@ void Viewport::mouseMoveEvent(QMouseEvent* event){
 
 void Viewport::mouseReleaseEvent(QMouseEvent* event){
     QWidget* widget=qobject_cast<QWidget*>(parent());
-    if (widget && event->buttons()&Qt::LeftButton)
+    if (widget && event->button()==Qt::LeftButton)
         emit mouseRelease(widget->mapFromGlobal(QCursor::pos()));
     QWidget::mouseReleaseEvent(event);
 }
 
 void Viewport::mousePressEvent(QMouseEvent* event){
     QWidget* widget=qobject_cast<QWidget*>(parent());
-    if (widget && event->buttons()&Qt::LeftButton)
+    if (widget && event->button()==Qt::LeftButton)
         emit mousePress(widget->mapFromGlobal(QCursor::pos()));
     QWidget::mousePressEvent(event);
 }
