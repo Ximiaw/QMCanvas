@@ -65,6 +65,7 @@
 *scene* — 新的场景对象指针
 ***
 
-### `void sizeChanged()`
-视图大小变化时发送信号
+### `void sizeChanged(QSize size)`
+视图大小变化时发送信号  
+*size* — 新的视图大小
 ***

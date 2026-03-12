@@ -5,9 +5,9 @@
 
 ## 构造函数
 
-### `QMCanvasScene(QPixmap pixmap=QPixmap(200,200), QObject* parent=nullptr)`
+### `QMCanvasScene(QPixmap pixmap=QPixmap(500,500), QObject* parent=nullptr)`
 初始化场景对象  
-*pixmap* — 初始位图，默认为 200x200 的空白位图  
+*pixmap* — 初始位图，默认为 500x500 的空白位图  
 *parent* — 父对象指针
 ***
 
@@ -31,6 +31,39 @@
 从场景中移除并删除指定的绘制对象  
 *graphic* — 要删除的绘制对象指针  
 **Returns** — 删除成功返回 true，对象不存在返回 false
+***
+
+### `bool isMove() const`
+获取当前是否处于鼠标移动状态  
+**Returns** — true 表示鼠标正在移动，false 表示未移动
+***
+
+### `void beginMove()`
+开始鼠标移动操作，设置 mouseMove_ 标志为 true
+***
+
+### `void endMove()`
+结束鼠标移动操作，设置 mouseMove_ 标志为 false
+***
+
+### `qreal maxRatio() const`
+获取最大缩放倍率  
+**Returns** — 最大缩放倍率，默认为 20.0
+***
+
+### `void setMaxRatio(qreal max)`
+设置最大缩放倍率  
+*max* — 最大缩放倍率
+***
+
+### `qreal minRatio() const`
+获取最小缩放倍率  
+**Returns** — 最小缩放倍率，默认为 0.01
+***
+
+### `void setMinRatio(qreal min)`
+设置最小缩放倍率  
+*min* — 最小缩放倍率
 ***
 
 ### `void setPixmap(QPixmap& pixmap)`
@@ -72,7 +105,7 @@
 
 ### `qreal factor() const`
 获取每次缩放的倍率  
-**Returns** — 缩放倍率
+**Returns** — 缩放倍率，默认为 1.0
 ***
 
 ### `void setFactor(qreal factor)`
@@ -110,6 +143,10 @@
 *object* — 新的活动绘图对象指针
 ***
 
+### `void finishActiveDrawObject()`
+完成当前活动绘图对象的绘制，将其添加到绘制对象列表中
+***
+
 ## 私有方法
 
 ### `void inform()`
@@ -126,7 +163,7 @@
 ### `void onScaleBy(bool magnify, QPoint point)`
 相对缩放时调用，根据 magnify 执行放大或缩小操作  
 *magnify* — 缩放判断，true 表示放大，false 表示缩小  
-*point* — 缩放中心点（当前未完全实现光标偏移处理）
+*point* — 缩放中心点
 ***
 
 ### `void onSizeChanged()`

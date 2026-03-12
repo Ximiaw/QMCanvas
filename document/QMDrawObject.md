@@ -35,3 +35,13 @@
 **注意**：必须在 begin 调用之后才能记录点，begin 前禁止记录  
 *point* — 需要记录的中间点坐标
 ***
+
+### `virtual QPen* pen() const = 0`
+获取绘制使用的画笔  
+**Returns** — 画笔指针
+***
+
+### `virtual QBrush* brush() const = 0`
+获取绘制使用的画刷  
+**Returns** — 画刷指针
+***

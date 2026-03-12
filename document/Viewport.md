@@ -6,7 +6,7 @@
 ## 构造函数
 
 ### `Viewport(QWidget* parent=nullptr)`
-初始化视口对象，parent 为父窗口指针。自动禁用背景填充、启用鼠标追踪并设置白色背景
+初始化视口对象，parent 为父窗口指针。自动禁用背景填充、启用鼠标追踪并安装事件过滤器
 ***
 
 ### `~Viewport()`
@@ -21,18 +21,25 @@
 ***
 
 ### `void mouseMoveEvent(QMouseEvent* event) override`
-重写鼠标移动事件，当左键按下时发送鼠标移动信号  
+重写鼠标移动事件，当左键按下且场景处于移动状态时发送鼠标移动信号  
 *event* — 鼠标事件对象
 ***
 
 ### `void mouseReleaseEvent(QMouseEvent* event) override`
-重写鼠标释放事件，当左键释放时发送鼠标释放信号  
+重写鼠标释放事件，当左键释放时发送鼠标释放信号并结束移动状态  
 *event* — 鼠标事件对象
 ***
 
 ### `void mousePressEvent(QMouseEvent* event) override`
-重写鼠标按下事件，当左键按下时发送鼠标按下信号  
+重写鼠标按下事件，当左键按下时发送鼠标按下信号并开始移动状态  
 *event* — 鼠标事件对象
+***
+
+### `bool eventFilter(QObject* watched, QEvent* event) override`
+重写事件过滤器，处理键盘快捷键（Ctrl+Z 撤销）  
+*watched* — 被监视的对象  
+*event* — 事件对象  
+**Returns** — 事件已处理返回 true，否则返回 false
 ***
 
 ## 公共槽函数
