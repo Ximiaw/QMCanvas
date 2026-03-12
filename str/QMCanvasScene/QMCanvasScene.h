@@ -30,6 +30,7 @@ private:
     qreal marginRate_=1.0;//当前外扩倍率，1为默认值
     qreal maxRatio_=20.0;//最大缩放倍率
     qreal minRatio_=0.01;//最小缩放倍率
+    bool mouseMove_=false;
 public:
     QMCanvasScene(QPixmap pixmap=QPixmap(500,500),QObject* parent=nullptr);
     ~QMCanvasScene() override = default;
@@ -37,6 +38,10 @@ public:
     const QList<QMDrawObject*> graphicList() const;
     void addGraphic(QMDrawObject* graphic);//添加到对象树
     bool deleteGraphic(QMDrawObject* graphic);
+
+    bool isMove() const;
+    void beginMove();
+    void endMove();
 
     qreal maxRatio() const;
     void setMaxRatio(qreal max);
@@ -66,6 +71,7 @@ public:
 
     QMDrawObject* activeDrawObject() const;
     void setActiveDrawObject(QMDrawObject* object);//会delete旧的活跃绘图对象
+    void finishActiveDrawObject();
 
 private:
     void inform();//通知所有信号发送

@@ -9,7 +9,8 @@ Viewport::Viewport(QWidget* parent):
     QWidget(parent){
     setAutoFillBackground(false);
     setMouseTracking(true);
-    setStyleSheet("background-color: red;");//测试用，方便观察，回头记得删
+    installEventFilter(this);
+
 }
 
 void Viewport::paintEvent(QPaintEvent* event){
@@ -18,6 +19,21 @@ void Viewport::paintEvent(QPaintEvent* event){
     scenePointer_.get()->updatePixmap(&painter);
     scenePointer_.get()->draw(&painter);
     painter.end();
+}
+
+bool Viewport::eventFilter(QObject* watched, QEvent* event){
+    if (watched == this && event->type() == QEvent::KeyPress && !scenePointer_.isNull()){
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        Qt::KeyboardModifiers modifiers = keyEvent->modifiers();
+        int key = keyEvent->key();
+
+        if (modifiers == Qt::ControlModifier && key == Qt::Key_Z) {
+            if (!scenePointer_.get()->graphicList().isEmpty())
+                scenePointer_.get()->deleteGraphic(scenePointer_.get()->graphicList().back());
+            return true;
+        }
+    }
+    return QWidget::eventFilter(watched, event);
 }
 
 void Viewport::onSceneChanged(QMCanvasScene* scene){
@@ -45,21 +61,31 @@ void Viewport::onPixmapChanged(){
 
 void Viewport::mouseMoveEvent(QMouseEvent* event){
     QWidget* widget=qobject_cast<QWidget*>(parent());
-    if (widget && event->buttons()&Qt::LeftButton)
+    if (scenePointer_.isNull())
+        return;
+    if (widget && event->buttons()&Qt::LeftButton && scenePointer_.get()->isMove()){
         emit mouseMove(widget->mapFromGlobal(QCursor::pos()));
+    }
     QWidget::mouseMoveEvent(event);
 }
 
 void Viewport::mouseReleaseEvent(QMouseEvent* event){
     QWidget* widget=qobject_cast<QWidget*>(parent());
-    if (widget && event->button()==Qt::LeftButton)
+    if (widget && event->button()==Qt::LeftButton){
         emit mouseRelease(widget->mapFromGlobal(QCursor::pos()));
+        if (!scenePointer_.isNull())
+            scenePointer_.get()->endMove();
+    }
     QWidget::mouseReleaseEvent(event);
 }
 
 void Viewport::mousePressEvent(QMouseEvent* event){
     QWidget* widget=qobject_cast<QWidget*>(parent());
     if (widget && event->button()==Qt::LeftButton)
+    {
         emit mousePress(widget->mapFromGlobal(QCursor::pos()));
+        if (!scenePointer_.isNull())
+            scenePointer_.get()->beginMove();
+    }
     QWidget::mousePressEvent(event);
 }

@@ -29,6 +29,18 @@ bool QMCanvasScene::deleteGraphic(QMDrawObject* graphic){
     return true;
 }
 
+bool QMCanvasScene::isMove() const{
+    return mouseMove_;
+}
+
+void QMCanvasScene::beginMove(){
+    mouseMove_ = true;
+}
+
+void QMCanvasScene::endMove(){
+    mouseMove_ = false;
+}
+
 qreal QMCanvasScene::maxRatio() const{
     return maxRatio_;
 }
@@ -166,12 +178,21 @@ QMDrawObject* QMCanvasScene::activeDrawObject() const{
 }
 
 void QMCanvasScene::setActiveDrawObject(QMDrawObject* object){
+    if (!object) return;
+    if (drawObject_.contains(object)) return;
     if (activeDrawObject_){
         activeDrawObject_->setParent(nullptr);
         activeDrawObject_->deleteLater();
     }
     activeDrawObject_=object;
     object->setParent(this);
+}
+
+void QMCanvasScene::finishActiveDrawObject(){
+    if (activeDrawObject_){
+        addGraphic(activeDrawObject_);
+        activeDrawObject_=nullptr;
+    }
 }
 
 void QMCanvasScene::inform(){
@@ -221,8 +242,7 @@ void QMCanvasScene::onMousePress(QPoint point){
 void QMCanvasScene::onMouseRelease(QPoint point){
     if (activeDrawObject()==nullptr) return;
     activeDrawObject()->end(point);
-    addGraphic(activeDrawObject());
-    activeDrawObject_=nullptr;
+    finishActiveDrawObject();
 }
 
 void QMCanvasScene::onHScrollBarChanged(int value){
