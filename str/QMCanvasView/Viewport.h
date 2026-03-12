@@ -7,7 +7,6 @@
 
 #include <QObject>
 #include <QWidget>
-#include <QtOpenGLWidgets/QOpenGLWidget>
 #include <QPaintEvent>
 #include <QPointer>
 #include <QPainter>
