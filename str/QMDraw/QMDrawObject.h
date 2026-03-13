@@ -1,6 +1,5 @@
-//
-// Created by m3311 on 2026/3/5.
-//
+// Copyright (c) 2026 Ximiaw
+// SPDX-License-Identifier: MIT
 
 #ifndef MAIN_QMDRAWOBJECT_H
 #define MAIN_QMDRAWOBJECT_H

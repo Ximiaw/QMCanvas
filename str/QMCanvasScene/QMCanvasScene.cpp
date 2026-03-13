@@ -1,6 +1,5 @@
-//
-// Created by m3311 on 2026/3/1.
-//
+// Copyright (c) 2026 Ximiaw
+// SPDX-License-Identifier: MIT
 
 #include "QMCanvasScene.h"
 #include "QMCanvasView.h"
@@ -134,6 +133,8 @@ void QMCanvasScene::init(QMCanvasView* canvasView,View* view,Viewport* viewport)
     connect(viewport,&Viewport::mouseMove,this,&QMCanvasScene::onMouseMove);
     connect(viewport,&Viewport::mouseRelease,this,&QMCanvasScene::onMouseRelease);
     connect(viewport,&Viewport::mousePress,this,&QMCanvasScene::onMousePress);
+    connect(viewport,&Viewport::ctrlAndZ,this,&QMCanvasScene::onCtrlAndZ);
+    connect(viewport,&Viewport::ctrlAndY,this,&QMCanvasScene::onCtrlAndY);
     connect(this,&QMCanvasScene::viewportRectChanged,viewport,&Viewport::onRectChanged);
     connect(this,&QMCanvasScene::viewportPixmapChanged,viewport,&Viewport::onPixmapChanged);
 
@@ -213,7 +214,7 @@ void QMCanvasScene::onViewportChanged(QRectF rect){
 }
 
 void QMCanvasScene::onScaleBy(bool magnify, QPoint point){
-    mousePoint_ = QPoint(point.x()/ratio(),point.y()/ratio());
+    mousePoint_ = QPoint(point.x()/ratio(),point.y()/ratio());//记得做
     if (magnify){
         qreal r = ratio()*factor();
         if (r>maxRatio()) r = maxRatio();
@@ -246,7 +247,7 @@ void QMCanvasScene::onMouseRelease(QPoint point){
 }
 
 void QMCanvasScene::onHScrollBarChanged(int value){
-    //不要问我为什么要新建一个QRectF，我也不知道为什么在原有的rect上改会出bug
+    //在原有的rect上改会出bug，疑似是因为隐式共享
     viewportRect_ = QRectF(value/ratio(),viewportRect_.y(),viewportRect_.width(),viewportRect_.height());
     inform();
 }
@@ -254,4 +255,13 @@ void QMCanvasScene::onHScrollBarChanged(int value){
 void QMCanvasScene::onVScrollBarChanged(int value){
     viewportRect_ = QRectF(viewportRect_.x(),value/ratio(),viewportRect_.width(),viewportRect_.height());
     inform();
+}
+
+void QMCanvasScene::onCtrlAndZ(){
+    if (drawObject_.isEmpty()) return;
+    deleteGraphic(graphicList().back());
+}
+
+void QMCanvasScene::onCtrlAndY(){
+    //重做
 }

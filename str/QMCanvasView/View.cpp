@@ -1,6 +1,5 @@
-//
-// Created by m3311 on 2026/2/28.
-//
+// Copyright (c) 2026 Ximiaw
+// SPDX-License-Identifier: MIT
 
 #include "View.h"
 

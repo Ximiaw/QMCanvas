@@ -1,6 +1,5 @@
-//
-// Created by m3311 on 2026/3/1.
-//
+// Copyright (c) 2026 Ximiaw
+// SPDX-License-Identifier: MIT
 
 #ifndef MAIN_VIEWPORT_H
 #define MAIN_VIEWPORT_H
@@ -32,6 +31,8 @@ signals:
     void mouseMove(QPoint point);
     void mouseRelease(QPoint point);
     void mousePress(QPoint point);
+    void ctrlAndZ();
+    void ctrlAndY();
 public slots:
     void onSceneChanged(QMCanvasScene* scene);
     void onRectChanged();

@@ -1,6 +1,5 @@
-//
-// Created by m3311 on 2026/2/28.
-//
+// Copyright (c) 2026 Ximiaw
+// SPDX-License-Identifier: MIT
 
 #ifndef MAIN_VIEW_H
 #define MAIN_VIEW_H

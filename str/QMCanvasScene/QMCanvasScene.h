@@ -1,6 +1,5 @@
-//
-// Created by m3311 on 2026/3/1.
-//
+// Copyright (c) 2026 Ximiaw
+// SPDX-License-Identifier: MIT
 
 #ifndef MAIN_QMCANVASSCENE_H
 #define MAIN_QMCANVASSCENE_H
@@ -84,6 +83,8 @@ public slots:
     void onMousePress(QPoint point);
     void onHScrollBarChanged(int value);
     void onVScrollBarChanged(int value);
+    void onCtrlAndZ();
+    void onCtrlAndY();
 signals:
     void viewportRectChanged();//onViewportChanged和onScaleBy以及view的滚动条滚动触发
     void viewportPixmapChanged();

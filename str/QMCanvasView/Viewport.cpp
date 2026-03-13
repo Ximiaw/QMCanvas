@@ -1,6 +1,5 @@
-//
-// Created by m3311 on 2026/3/1.
-//
+// Copyright (c) 2026 Ximiaw
+// SPDX-License-Identifier: MIT
 
 #include "Viewport.h"
 #include "QMCanvasScene.h"
@@ -28,8 +27,11 @@ bool Viewport::eventFilter(QObject* watched, QEvent* event){
         int key = keyEvent->key();
 
         if (modifiers == Qt::ControlModifier && key == Qt::Key_Z) {
-            if (!scenePointer_.get()->graphicList().isEmpty())
-                scenePointer_.get()->deleteGraphic(scenePointer_.get()->graphicList().back());
+            emit ctrlAndZ();
+            return true;
+        }
+        if (modifiers == Qt::ControlModifier && key == Qt::Key_Y) {
+            emit ctrlAndY();
             return true;
         }
     }
