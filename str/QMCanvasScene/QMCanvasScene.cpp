@@ -88,10 +88,29 @@ QRect QMCanvasScene::getViewportRect(){
     qreal w = viewportRect_.width() * ratio() * extraViewportMargin();
     qreal h = viewportRect_.height() * ratio() * extraViewportMargin();
 
-    x = x - (w - viewportRect_.width() * ratio()) / 2;
-    y = y - (h - viewportRect_.height() * ratio()) / 2;
+    qreal dw = (w - viewportRect_.width() * ratio()) / 2;
+    qreal dh = (h - viewportRect_.height() * ratio()) / 2;
+
+    x = x - dw;
+    y = y - dh;
 
     QRectF rect(x,y,w,h);
+
+    if (mousePoint_.x() >= 0 || mousePoint_.y() >= 0){
+        qreal dw_m = mousePoint_.x() - viewportRect_.x();
+        qreal dh_m = mousePoint_.y() - viewportRect_.y();
+
+        qreal dw_m_r = mousePoint_.x() * ratio();
+        qreal dh_m_r = mousePoint_.y() * ratio();
+        mousePoint_ = QPoint(-1,-1);
+
+        rect = QRect(
+            dw_m_r - dw_m,
+            dh_m_r - dh_m,
+            rect.width(),
+            rect.height()
+        );
+    }
 
     qreal qw = pixmap().width() * ratio();
     qreal qh = pixmap().height() * ratio();
@@ -214,7 +233,7 @@ void QMCanvasScene::onViewportChanged(QRectF rect){
 }
 
 void QMCanvasScene::onScaleBy(bool magnify, QPoint point){
-    mousePoint_ = QPoint(point.x()/ratio(),point.y()/ratio());//记得做
+    mousePoint_ = QPoint(point.x()/ratio(),point.y()/ratio());
     if (magnify){
         qreal r = ratio()*factor();
         if (r>maxRatio()) r = maxRatio();
