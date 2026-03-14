@@ -11,7 +11,6 @@
 #include <QPixmap>
 
 #include "QMDrawObject.h"
-#include "LayerManager.h"
 
 class QMCanvasView;
 class View;
