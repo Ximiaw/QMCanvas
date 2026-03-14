@@ -25,6 +25,8 @@ public:
     bool hide(int index);
     bool hide()=delete;
 
+    void swap(int a,int b);
+
     QPixmap& base();//获取基底的引用，以便copy
     void setBase(const QSize& baseSize);//必须先设置这个
 

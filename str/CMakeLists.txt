@@ -16,6 +16,8 @@ qt_add_library(QMCanvas STATIC
         QMCanvasScene/AbstractLayer.cpp
         QMCanvasScene/Layer.cpp
         QMCanvasScene/LayerManager.cpp
+        QMCanvasScene/Location.cpp
+        QMCanvasScene/Location.h
 )
 
 target_link_libraries(QMCanvas PRIVATE

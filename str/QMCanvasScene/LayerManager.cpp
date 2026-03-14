@@ -21,6 +21,13 @@ bool LayerManager::hide(int index){
     return items_.at(index).get()->hide();
 }
 
+void LayerManager::swap(int a, int b){
+    if (a==b) return;
+    if (items_.size()<=a||a<0) return;
+    if (items_.size()<=b||b<0) return;
+    std::swap(items_[a],items_[b]);
+}
+
 QPixmap& LayerManager::base(){
     return base_;
 }
