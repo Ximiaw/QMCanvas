@@ -16,7 +16,6 @@ private:
 public:
     QMDrawObject(QObject* parent);
     ~QMDrawObject() override = default;
-    virtual bool isPixmap() = 0;//需要这个判断是否未基底，所有图层及其所有图元至少有一个图片基底，基底之下的图层不会显示
     virtual void draw(QPainter* painter) = 0;
     virtual void begin(QPoint point) = 0;
     virtual void end(QPoint point) = 0;
