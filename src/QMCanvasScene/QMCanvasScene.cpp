@@ -177,7 +177,7 @@ void QMCanvasScene::inform(){
     qreal x = location_.viewportRectRM().x();
     qreal y = location_.viewportRectRM().y();
     qreal pix_w = location_.baseRect().width() * ratio();
-    qreal pix_h = location_.baseRect().width() * ratio();
+    qreal pix_h = location_.baseRect().height() * ratio();
     emit viewPropertyChanged(QPoint(x,y),QSize(pix_w,pix_h));
 }
 
