@@ -32,16 +32,23 @@ T* AbstractLayer<T>::activeObject(){
 template <typename T>
 QSharedPointer<T> AbstractLayer<T>::setActiveObject(QSharedPointer<T> object){
     if (object.isNull() || object.get() == activeItem_.get()) return QSharedPointer<T>{nullptr};
+    if (items_.back().get()==activeItem_.get()) items_.takeLast();
     auto n = activeItem_;
     activeItem_ = object;
+    items_.append(activeItem_);
     return n;
+}
+
+template <typename T>
+void AbstractLayer<T>::setActiveObject(int index){
+    if (index<0||items_.size()<=index) return;
+    activeItem_ = items_.at(index);
 }
 
 template <typename T>
 void AbstractLayer<T>::finishActiveObject()
 {
     if (activeItem_.isNull()) return;
-    items_.append(activeItem_);
     activeItem_.reset(nullptr);
     undoStack_.clear();
 }

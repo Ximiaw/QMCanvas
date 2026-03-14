@@ -26,6 +26,8 @@ public:
 
     T *activeObject();
     QSharedPointer<T> setActiveObject(QSharedPointer<T> object);
+    void setActiveObject(int index);
+
     void finishActiveObject();
 
     virtual void undo();
