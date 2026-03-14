@@ -12,6 +12,7 @@
 
 #include "QMDrawObject.h"
 #include "LayerManager.h"
+#include "Location.h"
 
 class QMCanvasView;
 class View;
@@ -20,16 +21,12 @@ class Viewport;
 class QMCanvasScene : public QObject {
     Q_OBJECT
 private:
+    Location location_;
+
     QList<QMDrawObject*> drawObject_;
     QMDrawObject* activeDrawObject_=nullptr;//当前活动的绘图对象，按下鼠标左键开始记录点，释放结束并放入列表
     QPixmap pixmap_;
-    QRectF viewportRect_;//未缩放未外扩的viewport区域
     QPoint mousePoint_;//鼠标指向的位置，是未缩放未外扩的
-    qreal factor_=1.0;//每次缩放倍率，和viewportRate相乘
-    qreal ratio_=1.0;//当前图像倍率，如1.2为原图的1.2倍
-    qreal marginRate_=1.0;//当前外扩倍率，1为默认值
-    qreal maxRatio_=20.0;//最大缩放倍率
-    qreal minRatio_=0.01;//最小缩放倍率
     bool mouseMove_=false;
 public:
     QMCanvasScene(QPixmap pixmap=QPixmap(500,500),QObject* parent=nullptr);

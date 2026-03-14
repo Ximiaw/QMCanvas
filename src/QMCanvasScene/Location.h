@@ -14,7 +14,7 @@ private:
     QRectF viewportRect_;//未缩放未外扩的viewport区域
     //QRectF viewportRectRM_;//缩放外扩后的viewport区域
 
-    bool considerMouse_;//为true时根据鼠标计算偏移
+    bool considerMouse_=false;//为true时根据鼠标计算偏移
     QPoint mousePoint_;//鼠标指向的位置，是未缩放未外扩的
 
     qreal factor_=1.0;//每次缩放倍率，和viewportRate相乘

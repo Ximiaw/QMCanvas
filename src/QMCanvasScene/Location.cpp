@@ -72,6 +72,7 @@ QRectF Location::viewportRectRM(){
 
 void Location::setMousePoint(QPoint point){
     mousePoint_ = QPoint(point);
+    considerMouse_=true;
 }
 
 qreal Location::maxRatio() const{
