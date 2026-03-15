@@ -7,19 +7,19 @@
 
 ## 组件列表
 
-| 组件 | 说明 |
-|------|------|
-| [QMCanvasView](QMCanvasView.md) | 画布视图容器 |
-| [QMCanvasScene](QMCanvasScene.md) | 场景管理器 |
-| [Viewport](Viewport.md) | 视口渲染部件 |
-| [View](View.md) | 滚动视图容器 |
-| [QMDrawObject](QMDrawObject.md) | 绘制对象基类 |
-| [QMDrawPixmap](QMDrawPixmap.md) | 位图绘制对象 |
-| [AbstractLayer](AbstractLayer.md) | 图层管理模板基类 |
-| [Layer](Layer.md) | 绘制对象图层 |
-| [LayerManager](LayerManager.md) | 多图层管理器 |
-| [Location](Location.md) | 位置管理和坐标变换 |
-| [WheelMode](WheelMode.md) | 滚轮模式枚举 |
+| 组件                                         | 说明 |
+|--------------------------------------------|------|
+| [QMCanvasView](document/QMCanvasView.md)   | 画布视图容器 |
+| [QMCanvasScene](document/QMCanvasScene.md) | 场景管理器 |
+| [Viewport](document/Viewport.md)           | 视口渲染部件 |
+| [View](document/View.md)                   | 滚动视图容器 |
+| [QMDrawObject](document/QMDrawObject.md)   | 绘制对象基类 |
+| [QMDrawPixmap](document/QMDrawPixmap.md)   | 位图绘制对象 |
+| [AbstractLayer](document/AbstractLayer.md) | 图层管理模板基类 |
+| [Layer](document/Layer.md)                 | 绘制对象图层 |
+| [LayerManager](document/LayerManager.md)   | 多图层管理器 |
+| [Location](document/Location.md)           | 位置管理和坐标变换 |
+| [WheelMode](document/WheelMode.md)         | 滚轮模式枚举 |
 
 ## 依赖
 
