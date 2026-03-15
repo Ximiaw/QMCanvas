@@ -11,13 +11,12 @@
 #include "QMDrawObject.h"
 
 class Layer : public AbstractLayer<QMDrawObject>{
-private:
-    QPixmap pixmap_;
 public:
     QPixmap pixmap();
 
     QSharedPointer<QMDrawObject> setActiveObject(QSharedPointer<QMDrawObject> object) override;
     void switchActiveObject(int index) override;
+    void finishActiveObject() override;
 };
 
 #endif //MAIN_LAYER_H

@@ -63,12 +63,14 @@ QPixmap LayerManager::pixmap(){
     QPixmap pixmap = base_;
     QPainter painter(&pixmap);
     painter.drawPixmap(down_.rect(),down_);
-    for (auto draw = activeItem_->items().begin();
-        !activeItem_.get()->hide() && draw!=activeItem_->items().end();
-        draw++){
-        if (draw->isNull()) continue;
-        draw->get()->draw(&painter);
-    }
+    // for (auto draw = activeItem_->items().begin();
+    //     !activeItem_.get()->hide() && draw!=activeItem_->items().end();
+    //     draw++){
+    //     if (draw->isNull()) continue;
+    //     draw->get()->draw(&painter);
+    // }
+    if (!activeItem_.isNull())
+        painter.drawPixmap(activeItem_->pixmap().rect(),activeItem_->pixmap());
     painter.drawPixmap(up_.rect(),up_);
     return pixmap;
 }

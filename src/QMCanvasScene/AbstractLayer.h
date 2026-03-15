@@ -37,7 +37,7 @@ public:
     virtual QSharedPointer<T> setActiveObject(QSharedPointer<T> object);
     virtual void switchActiveObject(int index);
 
-    void finishActiveObject();
+    virtual void finishActiveObject();
 
     virtual void undo();
     virtual void redo();

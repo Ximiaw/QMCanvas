@@ -2,16 +2,18 @@
 // SPDX-License-Identifier: MIT
 
 #include "Layer.h"
+#include <QLabel>
+
 
 QPixmap Layer::pixmap(){
-    pixmap_ = QPixmap(base_);
-    QPainter painter(&pixmap_);
+    QPixmap pixmap = QPixmap(base_);
+    QPainter painter(&pixmap);
 
     painter.drawPixmap(down_.rect(),down_);
     if (!activeItem_.isNull())
         activeItem_.get()->draw(&painter);
     painter.drawPixmap(up_.rect(),up_);
-    return pixmap_;
+    return pixmap;
 }
 
 QSharedPointer<QMDrawObject> Layer::setActiveObject(QSharedPointer<QMDrawObject> object){
@@ -37,4 +39,10 @@ void Layer::switchActiveObject(int index){
         else
             draw->get()->draw(&pu);
     }
+}
+
+void Layer::finishActiveObject(){
+    QPainter painter(&down_);
+    activeItem_.get()->draw(&painter);
+    AbstractLayer::finishActiveObject();
 }
