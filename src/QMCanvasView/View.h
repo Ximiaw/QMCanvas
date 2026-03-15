@@ -22,18 +22,14 @@ enum class WheelMode {
 
 class View : public QScrollArea{
     Q_OBJECT
-
 public:
     View(QWidget* parent=nullptr);
     ~View() override;
-
 private:
     WheelMode wheelMode_ = WheelMode::ROLL;
-
 public:
     void setWheelMode(WheelMode mode);
     WheelMode wheelMode() const;
-
 protected:
     void wheelEvent(QWheelEvent *event) override;
 private:

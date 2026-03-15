@@ -10,6 +10,17 @@ qt_add_library(QMCanvas STATIC
         QMCanvasView/QMCanvasView.cpp
         QMCanvasView/QMCanvasView.h
         QMDraw/QMDrawObject.h
+        QMCanvasScene/LayerManager.h
+        QMCanvasScene/Layer.h
+        QMCanvasScene/AbstractLayer.h
+        QMCanvasScene/AbstractLayer.cpp
+        QMCanvasScene/Layer.cpp
+        QMCanvasScene/LayerManager.cpp
+        QMCanvasScene/Location.cpp
+        QMCanvasScene/Location.h
+        QMDraw/QMDrawPixmap.cpp
+        QMDraw/QMDrawPixmap.h
+        QMDraw/QMDrawObject.cpp
 )
 
 target_link_libraries(QMCanvas PRIVATE

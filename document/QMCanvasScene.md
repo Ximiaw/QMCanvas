@@ -17,22 +17,6 @@
 
 ## 公共方法
 
-### `const QList<QMDrawObject*> graphicList() const`
-获取当前场景中的所有绘制对象列表  
-**Returns** — 绘制对象指针列表
-***
-
-### `void addGraphic(QMDrawObject* graphic)`
-向场景中添加绘制对象，scene 将接管该对象的生命周期管理（设置父对象）  
-*graphic* — 要添加的绘制对象指针
-***
-
-### `bool deleteGraphic(QMDrawObject* graphic)`
-从场景中移除并删除指定的绘制对象  
-*graphic* — 要删除的绘制对象指针  
-**Returns** — 删除成功返回 true，对象不存在返回 false
-***
-
 ### `bool isMove() const`
 获取当前是否处于鼠标移动状态  
 **Returns** — true 表示鼠标正在移动，false 表示未移动
@@ -66,14 +50,9 @@
 *min* — 最小缩放倍率
 ***
 
-### `void setPixmap(QPixmap& pixmap)`
-设置场景的底图，同时重置视口矩形和显示倍率  
-*pixmap* — 新的位图
-***
-
-### `const QPixmap& pixmap() const`
+### `const QPixmap pixmap()`
 获取当前场景的底图  
-**Returns** — 当前位图的常量引用
+**Returns** — 当前位图
 ***
 
 ### `QPixmap getViewportPixmap()`
@@ -84,11 +63,6 @@
 ### `QRect getViewportRect()`
 获取当前视口矩形（经过缩放和外扩处理）  
 **Returns** — 视口矩形
-***
-
-### `void updatePixmap(QPainter* painter)`
-更新位图缓存，将视口位图绘制到 painter 上  
-*painter* — QPainter 绘制对象
 ***
 
 ### `void draw(QPainter* painter)`
@@ -133,7 +107,7 @@
 *ratio* — 显示倍率
 ***
 
-### `QMDrawObject* activeDrawObject() const`
+### `QMDrawObject* activeDrawObject()`
 获取当前活动的绘图对象  
 **Returns** — 活动绘图对象指针，若无则返回 nullptr
 ***
@@ -195,6 +169,14 @@
 *value* — 滚动条当前值
 ***
 
+### `void onCtrlAndZ()`
+响应 Ctrl+Z 快捷键，执行撤销操作
+***
+
+### `void onCtrlAndY()`
+响应 Ctrl+Y 快捷键，执行重做操作
+***
+
 ## 信号
 
 ### `void viewportRectChanged()`
@@ -209,4 +191,14 @@
 通知 View 更新滚动条位置和视图大小  
 *point* — 新的滚动位置  
 *size* — 新的视图大小
+***
+
+## 私有成员
+
+| 成员名 | 类型 | 说明 |
+|--------|------|------|
+| `location_` | `Location` | 位置管理对象 |
+| `layerManager_` | `LayerManager` | 图层管理器 |
+| `mouseMove_` | `bool` | 鼠标移动状态标志 |
+
 ***

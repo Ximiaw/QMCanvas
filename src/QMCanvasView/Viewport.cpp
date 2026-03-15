@@ -9,13 +9,13 @@ Viewport::Viewport(QWidget* parent):
     setAutoFillBackground(false);
     setMouseTracking(true);
     installEventFilter(this);
-
+    setFocusPolicy(Qt::StrongFocus);
+    setFocus();
 }
 
 void Viewport::paintEvent(QPaintEvent* event){
     if (scenePointer_.isNull()) return;
     QPainter painter(this);
-    scenePointer_.get()->updatePixmap(&painter);
     scenePointer_.get()->draw(&painter);
     painter.end();
 }
@@ -28,12 +28,11 @@ bool Viewport::eventFilter(QObject* watched, QEvent* event){
 
         if (modifiers == Qt::ControlModifier && key == Qt::Key_Z) {
             emit ctrlAndZ();
-            return true;
         }
         if (modifiers == Qt::ControlModifier && key == Qt::Key_Y) {
             emit ctrlAndY();
-            return true;
         }
+        update();
     }
     return QWidget::eventFilter(watched, event);
 }

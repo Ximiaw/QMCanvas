@@ -7,25 +7,10 @@
 #include "View.h"
 
 QMCanvasScene::QMCanvasScene(QPixmap pixmap,QObject* parent)
-    :QObject(parent){
-    setPixmap(pixmap);
-}
-
-const QList<QMDrawObject*> QMCanvasScene::graphicList() const{
-    return drawObject_;
-}
-
-void QMCanvasScene::addGraphic(QMDrawObject* graphic){
-    graphic->setParent(this);
-    drawObject_.append(graphic);
-}
-
-bool QMCanvasScene::deleteGraphic(QMDrawObject* graphic){
-    if (!graphic || drawObject_.indexOf(graphic) == -1) return false;
-    graphic->setParent(nullptr);
-    drawObject_.removeOne(graphic);
-    graphic->deleteLater();
-    return true;
+    :QObject(parent)
+    ,location_(pixmap.rect())
+    ,layerManager_(pixmap.size()){
+    layerManager_.activeObject()->setActiveObject(QSharedPointer<QMDrawObject>(new QMDrawPixmap(pixmap)));
 }
 
 bool QMCanvasScene::isMove() const{
@@ -41,113 +26,46 @@ void QMCanvasScene::endMove(){
 }
 
 qreal QMCanvasScene::maxRatio() const{
-    return maxRatio_;
+    return location_.maxRatio();
 }
 
 void QMCanvasScene::setMaxRatio(qreal max){
-    maxRatio_ = max;
+    location_.setMaxRatio(max);
 }
 
 qreal QMCanvasScene::minRatio() const{
-    return minRatio_;
+    return location_.minRatio();
 }
 
 void QMCanvasScene::setMinRatio(qreal min){
-    minRatio_ = min;
+    location_.setMinRatio(min);
 }
 
-void QMCanvasScene::setPixmap(QPixmap& pixmap){
-    viewportRect_ = QRect(pixmap.rect());
-    pixmap_ = pixmap;
-    setRatio(1.0);//这个函数会触发更新
-}
-
-const QPixmap& QMCanvasScene::pixmap() const{
-    return pixmap_;
+const QPixmap QMCanvasScene::pixmap(){
+    return layerManager_.pixmap();
 }
 
 QPixmap QMCanvasScene::getViewportPixmap(){
-    qreal x = viewportRect_.x();
-    qreal y = viewportRect_.y();
-    qreal w = viewportRect_.width() * extraViewportMargin();
-    qreal h = viewportRect_.height() * extraViewportMargin();
-
-    x = x - (w - viewportRect_.width()) / 2;
-    y = y - (h - viewportRect_.height()) / 2;
-
-    QRectF rect(x,y,w,h);
-
+    QRectF rect = location_.viewportRect();
+    QSize size = location_.viewportRectRM().toRect().size();
     QPixmap viewportPixmap = pixmap().copy(rect.toRect())
-        .scaled(w*ratio(),h*ratio(),Qt::KeepAspectRatio, Qt::FastTransformation);
+        .scaled(size,Qt::KeepAspectRatio, Qt::FastTransformation);
     return viewportPixmap;
 }
 
 QRect QMCanvasScene::getViewportRect(){
-    qreal x = viewportRect_.x() * ratio();
-    qreal y = viewportRect_.y() * ratio();
-    qreal w = viewportRect_.width() * ratio() * extraViewportMargin();
-    qreal h = viewportRect_.height() * ratio() * extraViewportMargin();
-
-    qreal dw = (w - viewportRect_.width() * ratio()) / 2;
-    qreal dh = (h - viewportRect_.height() * ratio()) / 2;
-
-    x = x - dw;
-    y = y - dh;
-
-    QRectF rect(x,y,w,h);
-
-    if (mousePoint_.x() >= 0 || mousePoint_.y() >= 0){
-        qreal dw_m = mousePoint_.x() - viewportRect_.x();
-        qreal dh_m = mousePoint_.y() - viewportRect_.y();
-
-        qreal dw_m_r = mousePoint_.x() * ratio();
-        qreal dh_m_r = mousePoint_.y() * ratio();
-        mousePoint_ = QPoint(-1,-1);
-
-        rect = QRect(
-            dw_m_r - dw_m,
-            dh_m_r - dh_m,
-            rect.width(),
-            rect.height()
-        );
-    }
-
-    qreal qw = pixmap().width() * ratio();
-    qreal qh = pixmap().height() * ratio();
-
-    if (qw < rect.x() + rect.width()){
-        rect.setX(qw - w);
-    }else if (rect.x() < 0){
-        rect.setX(0);
-    }
-    if (qh < rect.y() + rect.height()){
-        rect.setY(qh - h);
-    }else if (rect.y() < 0){
-        rect.setY(0);
-    }
-    return rect.toRect();
+    return location_.viewportRectRM().toRect();
 }
 
-void QMCanvasScene::updatePixmap(QPainter* painter){
-    QPixmap pixmap =getViewportPixmap();
+void QMCanvasScene::draw(QPainter* painter){
+    QPixmap pixmap = getViewportPixmap();
     QRect rect = pixmap.rect();
     painter->drawPixmap(rect,pixmap);
 }
 
-void QMCanvasScene::draw(QPainter* painter){
-    // if (drawObject_.count()>=20){
-    //
-    // //开启子线程合并到图片上，或者子线程持续开启，检测是否大于30，如果大于30这里给出合并的许可，将最老的10次操作合并到pixmap的基底上
-    //
-    // }
-
-    for (auto i=drawObject_.constBegin();i!=drawObject_.constEnd();i++){
-        (*i)->draw(painter);
-    }
-}
-
 void QMCanvasScene::init(QMCanvasView* canvasView,View* view,Viewport* viewport){
-    view->widget()->setGeometry(pixmap_.rect());
+    view->widget()->setGeometry(location_.viewportRect().toRect());
+    location_.setViewportRect(view->viewport()->rect());
 
     connect(viewport,&Viewport::mouseMove,this,&QMCanvasScene::onMouseMove);
     connect(viewport,&Viewport::mouseRelease,this,&QMCanvasScene::onMouseRelease);
@@ -168,72 +86,68 @@ void QMCanvasScene::init(QMCanvasView* canvasView,View* view,Viewport* viewport)
 }
 
 qreal QMCanvasScene::factor() const{
-    return factor_;
+    return location_.factor();
 }
 
 void QMCanvasScene::setFactor(qreal factor){
-    factor_ = factor;
+    location_.setFactor(factor);
 }
 
 qreal QMCanvasScene::extraViewportMargin() const{
-    return marginRate_;
+    return location_.extraViewportMargin();
 }
 
 void QMCanvasScene::setExtraViewportMargin(qreal rate){
-    marginRate_ = rate;
+    location_.setExtraViewportMargin(rate);
+
     inform();
 }
 
 qreal QMCanvasScene::ratio() const{
-    return ratio_;
+    return location_.ratio();
 }
 
 void QMCanvasScene::setRatio(qreal ratio){
-    ratio_=ratio;
+    location_.setRatio(ratio);
+
     inform();
 }
 
-QMDrawObject* QMCanvasScene::activeDrawObject() const{
-    return activeDrawObject_;
+QMDrawObject* QMCanvasScene::activeDrawObject(){
+    return layerManager_.activeObject()->activeObject();
 }
 
 void QMCanvasScene::setActiveDrawObject(QMDrawObject* object){
-    if (!object) return;
-    if (drawObject_.contains(object)) return;
-    if (activeDrawObject_){
-        activeDrawObject_->setParent(nullptr);
-        activeDrawObject_->deleteLater();
-    }
-    activeDrawObject_=object;
-    object->setParent(this);
+    layerManager_.activeObject()->setActiveObject(QSharedPointer<QMDrawObject>(object));
 }
 
 void QMCanvasScene::finishActiveDrawObject(){
-    if (activeDrawObject_){
-        addGraphic(activeDrawObject_);
-        activeDrawObject_=nullptr;
-    }
+    layerManager_.activeObject()->finishActiveObject();
 }
 
 void QMCanvasScene::inform(){
+    qreal x = location_.viewportRectRM().x();
+    qreal y = location_.viewportRectRM().y();
+    qreal pix_w = location_.baseRect().width() * ratio();
+    qreal pix_h = location_.baseRect().height() * ratio();
+    emit viewPropertyChanged(QPoint(x,y),QSize(pix_w,pix_h));
     emit viewportRectChanged();
     emit viewportPixmapChanged();
 
-    qreal x = viewportRect_.x() * ratio();
-    qreal y = viewportRect_.y() * ratio();
-    qreal pix_w = pixmap_.width() * ratio();
-    qreal pix_h = pixmap_.height() * ratio();
-    emit viewPropertyChanged(QPoint(x,y),QSize(pix_w,pix_h));
 }
 
 void QMCanvasScene::onViewportChanged(QRectF rect){
-    viewportRect_=QRect(rect.x()/ratio(),rect.y()/ratio()
-        ,rect.width()/ratio(),rect.height()/ratio());
+    qreal x = rect.x()/location_.ratio();
+    qreal y = rect.y()/location_.ratio();
+    qreal w = rect.width()/location_.ratio();
+    qreal h = rect.height()/location_.ratio();
+    location_.setViewportRect(QRectF(x,y,w,h));
+
     inform();
 }
 
 void QMCanvasScene::onScaleBy(bool magnify, QPoint point){
-    mousePoint_ = QPoint(point.x()/ratio(),point.y()/ratio());
+    location_.setMousePoint(QPoint(point.x()/ratio(),point.y()/ratio()));
     if (magnify){
         qreal r = ratio()*factor();
         if (r>maxRatio()) r = maxRatio();
@@ -251,36 +165,50 @@ void QMCanvasScene::onSizeChanged(){
 
 void QMCanvasScene::onMouseMove(QPoint point){
     if (activeDrawObject()==nullptr) return;
-    activeDrawObject()->recordPoint(point);
+    int x = point.x() / location_.ratio();
+    int y = point.y() / location_.ratio();
+    activeDrawObject()->recordPoint(QPoint(x,y));
+    inform();
 }
 
 void QMCanvasScene::onMousePress(QPoint point){
     if (activeDrawObject()==nullptr) return;
-    activeDrawObject()->begin(point);
+    int x = point.x() / location_.ratio();
+    int y = point.y() / location_.ratio();
+    activeDrawObject()->begin(QPoint(x,y));
+    inform();
 }
 
 void QMCanvasScene::onMouseRelease(QPoint point){
     if (activeDrawObject()==nullptr) return;
-    activeDrawObject()->end(point);
+    int x = point.x() / location_.ratio();
+    int y = point.y() / location_.ratio();
+    activeDrawObject()->end(QPoint(x,y));
     finishActiveDrawObject();
+    inform();
 }
 
 void QMCanvasScene::onHScrollBarChanged(int value){
     //在原有的rect上改会出bug，疑似是因为隐式共享
-    viewportRect_ = QRectF(value/ratio(),viewportRect_.y(),viewportRect_.width(),viewportRect_.height());
+    QRectF vr = location_.viewportRect();
+    QRectF rect = QRectF(value/ratio(),vr.y(),vr.width(),vr.height());
+    location_.setViewportRect(rect);
+
     inform();
 }
 
 void QMCanvasScene::onVScrollBarChanged(int value){
-    viewportRect_ = QRectF(viewportRect_.x(),value/ratio(),viewportRect_.width(),viewportRect_.height());
+    QRectF vr = location_.viewportRect();
+    QRectF rect = QRectF(vr.x(),value/ratio(),vr.width(),vr.height());
+    location_.setViewportRect(rect);
+
     inform();
 }
 
 void QMCanvasScene::onCtrlAndZ(){
-    if (drawObject_.isEmpty()) return;
-    deleteGraphic(graphicList().back());
+    layerManager_.activeObject()->undo();
 }
 
 void QMCanvasScene::onCtrlAndY(){
-    //重做
+    layerManager_.activeObject()->redo();
 }

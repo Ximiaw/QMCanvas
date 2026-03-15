@@ -7,9 +7,9 @@
 
 | 属性名 | 类型 | 说明 |
 |--------|------|------|
-| `wheelMode` | WheelMode | 滚轮模式，可读可写 |
-| `viewport` | const Viewport* | 视口指针，只读 |
-| `canvasScene` | QMCanvasScene* | 场景指针，可读可写，变化时发送信号 |
+| `wheelMode` | `WheelMode` | 滚轮模式，可读可写 |
+| `viewport` | `const Viewport*` | 视口指针，只读 |
+| `canvasScene` | `QMCanvasScene*` | 场景指针，可读可写，变化时发送信号 |
 
 ## 构造函数
 
@@ -68,4 +68,14 @@
 ### `void sizeChanged(QSize size)`
 视图大小变化时发送信号  
 *size* — 新的视图大小
+***
+
+## 私有成员
+
+| 成员名 | 类型 | 说明 |
+|--------|------|------|
+| `view_` | `View` | 内部滚动视图对象 |
+| `viewport_` | `Viewport` | 内部视口对象 |
+| `scenePointer_` | `QSharedPointer<QMCanvasScene>` | 场景智能指针 |
+
 ***
