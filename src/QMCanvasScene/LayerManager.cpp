@@ -5,10 +5,12 @@
 
 LayerManager::LayerManager(QObject* parent):AbstractLayer(parent){
     setBase(QSize(500,500));
+    LayerManager::setActiveObject(QSharedPointer<Layer>(new Layer));
 }
 
 LayerManager::LayerManager(const QSize& baseSize,QObject* parent):AbstractLayer(parent){
     setBase(baseSize);
+    LayerManager::setActiveObject(QSharedPointer<Layer>(new Layer));
 }
 
 bool LayerManager::hide(int index){

@@ -10,7 +10,6 @@ QMCanvasScene::QMCanvasScene(QPixmap pixmap,QObject* parent)
     :QObject(parent)
     ,location_(pixmap.rect())
     ,layerManager_(pixmap.size()){
-    layerManager_.setActiveObject(QSharedPointer<Layer>(new Layer));
     layerManager_.activeObject()->setActiveObject(QSharedPointer<QMDrawObject>(new QMDrawPixmap(pixmap)));
 }
 
