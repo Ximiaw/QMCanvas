@@ -23,6 +23,13 @@ void Location::setViewportRect(QRectF rect){
     viewportRect_=rect;
 }
 
+QRectF Location::viewRectRM(){
+    qreal w = baseRect_.width() * ratio();
+    qreal h = baseRect_.height() * ratio();
+    QRectF rect(0,0,w,h);
+    return rect;
+}
+
 QRectF Location::viewportRectRM(){
     qreal rx = viewportRect_.x() * ratio();
     qreal ry = viewportRect_.y() * ratio();

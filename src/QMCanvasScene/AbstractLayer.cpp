@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 #include "AbstractLayer.h"
+#include "Layer.h"
+#include "QMDrawObject.h"
 
 template <typename T>
 AbstractLayer<T>::AbstractLayer(QObject* parent):QObject(parent){
@@ -31,7 +33,7 @@ T* AbstractLayer<T>::activeObject(){
 
 template <typename T>
 QSharedPointer<T> AbstractLayer<T>::setActiveObject(QSharedPointer<T> object){
-    if (object.isNull() || object.get() == activeItem_.get()) return QSharedPointer<T>{nullptr};
+    if (object.isNull() || object.get() == activeItem_.get()) return nullptr;
     if (items_.contains(activeItem_)) items_.removeOne(activeItem_);
     if (items_.contains(object)) items_.removeOne(object);
     auto n = activeItem_;
@@ -41,7 +43,7 @@ QSharedPointer<T> AbstractLayer<T>::setActiveObject(QSharedPointer<T> object){
 }
 
 template <typename T>
-void AbstractLayer<T>::setActiveObject(int index){
+void AbstractLayer<T>::switchActiveObject(int index){
     if (index<0||items_.size()<=index) return;
     activeItem_ = items_.at(index);
 }
@@ -65,5 +67,8 @@ template <typename T>
 void AbstractLayer<T>::redo(){
     if (undoStack_.isEmpty()) return;
     items_.append(undoStack_.takeLast());
-    activeItem_.reset(items_.back());
+    activeItem_.reset(items_.back().get());
 }
+
+template class AbstractLayer<QMDrawObject>;
+template class AbstractLayer<Layer>;

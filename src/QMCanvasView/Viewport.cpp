@@ -15,7 +15,6 @@ Viewport::Viewport(QWidget* parent):
 void Viewport::paintEvent(QPaintEvent* event){
     if (scenePointer_.isNull()) return;
     QPainter painter(this);
-    scenePointer_.get()->updatePixmap(&painter);
     scenePointer_.get()->draw(&painter);
     painter.end();
 }

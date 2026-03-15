@@ -2,6 +2,4 @@
 // SPDX-License-Identifier: MIT
 
 #include "Layer.h"
-#include "AbstractLayer.h"
 
-template class AbstractLayer<QMDrawObject>;

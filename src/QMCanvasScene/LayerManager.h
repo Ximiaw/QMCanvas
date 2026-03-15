@@ -18,12 +18,18 @@ class LayerManager : public AbstractLayer<Layer>{
 private:
     QPixmap base_;//一个透明基底，先渲染到这个上面，而后才copy需要渲染的地方
 
+    QPixmap up_;//活动图层上方的图层合并成的图，减少每帧计算数量
+    QPixmap down_;//活动图层下方的图层合并成的图，减少每帧计算数量
+
 public:
     LayerManager(QObject* parent=nullptr);
     LayerManager(const QSize& baseSize,QObject* parent=nullptr);
 
     bool hide(int index);
     bool hide()=delete;
+
+    QSharedPointer<Layer> setActiveObject(QSharedPointer<Layer> object) override;
+    void switchActiveObject(int index) override;
 
     void swap(int a,int b);
 

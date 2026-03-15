@@ -12,7 +12,6 @@ class Location
 private:
     QRectF baseRect_;//基础区域，所有位置、空间都基于这个，相当于未缩放的图片大小
     QRectF viewportRect_;//未缩放未外扩的viewport区域
-    //QRectF viewportRectRM_;//缩放外扩后的viewport区域
 
     bool considerMouse_=false;//为true时根据鼠标计算偏移
     QPoint mousePoint_;//鼠标指向的位置，是未缩放未外扩的
@@ -32,6 +31,7 @@ public:
     QRectF viewportRect();
     void setViewportRect(QRectF rect);
 
+    QRectF viewRectRM();
     QRectF viewportRectRM();
     void setMousePoint(QPoint point);
 

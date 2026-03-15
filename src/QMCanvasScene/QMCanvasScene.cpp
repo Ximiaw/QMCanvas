@@ -7,25 +7,10 @@
 #include "View.h"
 
 QMCanvasScene::QMCanvasScene(QPixmap pixmap,QObject* parent)
-    :QObject(parent),location_(pixmap.rect()){
-    setPixmap(pixmap);
-}
-
-const QList<QMDrawObject*> QMCanvasScene::graphicList() const{
-    return drawObject_;
-}
-
-void QMCanvasScene::addGraphic(QMDrawObject* graphic){
-    graphic->setParent(this);
-    drawObject_.append(graphic);
-}
-
-bool QMCanvasScene::deleteGraphic(QMDrawObject* graphic){
-    if (!graphic || drawObject_.indexOf(graphic) == -1) return false;
-    graphic->setParent(nullptr);
-    drawObject_.removeOne(graphic);
-    graphic->deleteLater();
-    return true;
+    :QObject(parent)
+    ,location_(pixmap.rect())
+    ,layerManager_(pixmap.size()){
+    layerManager_.activeObject()->setActiveObject(QSharedPointer<QMDrawObject>(new QMDrawPixmap(pixmap)));
 }
 
 bool QMCanvasScene::isMove() const{
@@ -56,18 +41,12 @@ void QMCanvasScene::setMinRatio(qreal min){
     location_.setMinRatio(min);
 }
 
-void QMCanvasScene::setPixmap(QPixmap& pixmap){
-    //viewportRect_ = QRect(pixmap.rect());
-    pixmap_ = pixmap;
-    setRatio(1.0);//这个函数会触发更新
-}
-
-const QPixmap& QMCanvasScene::pixmap() const{
-    return pixmap_;
+const QPixmap QMCanvasScene::pixmap(){
+    return layerManager_.pixmap();
 }
 
 QPixmap QMCanvasScene::getViewportPixmap(){
-    QRectF rect(location_.viewportRect());
+    QRectF rect = location_.viewportRect();
     QSize size = location_.viewportRectRM().size().toSize();
     QPixmap viewportPixmap = pixmap().copy(rect.toRect())
         .scaled(size,Qt::KeepAspectRatio, Qt::FastTransformation);
@@ -78,26 +57,14 @@ QRect QMCanvasScene::getViewportRect(){
     return location_.viewportRectRM().toRect();
 }
 
-void QMCanvasScene::updatePixmap(QPainter* painter){
+void QMCanvasScene::draw(QPainter* painter){
     QPixmap pixmap =getViewportPixmap();
     QRect rect = pixmap.rect();
     painter->drawPixmap(rect,pixmap);
 }
 
-void QMCanvasScene::draw(QPainter* painter){
-    // if (drawObject_.count()>=20){
-    //
-    // //开启子线程合并到图片上，或者子线程持续开启，检测是否大于30，如果大于30这里给出合并的许可，将最老的10次操作合并到pixmap的基底上
-    //
-    // }
-
-    for (auto i=drawObject_.constBegin();i!=drawObject_.constEnd();i++){
-        (*i)->draw(painter);
-    }
-}
-
 void QMCanvasScene::init(QMCanvasView* canvasView,View* view,Viewport* viewport){
-    view->widget()->setGeometry(pixmap_.rect());
+    view->widget()->setGeometry(location_.viewportRect().toRect());
 
     connect(viewport,&Viewport::mouseMove,this,&QMCanvasScene::onMouseMove);
     connect(viewport,&Viewport::mouseRelease,this,&QMCanvasScene::onMouseRelease);
@@ -148,26 +115,16 @@ void QMCanvasScene::setRatio(qreal ratio){
     inform();
 }
 
-QMDrawObject* QMCanvasScene::activeDrawObject() const{
-    return activeDrawObject_;
+QMDrawObject* QMCanvasScene::activeDrawObject(){
+    return layerManager_.activeObject()->activeObject();
 }
 
 void QMCanvasScene::setActiveDrawObject(QMDrawObject* object){
-    if (!object) return;
-    if (drawObject_.contains(object)) return;
-    if (activeDrawObject_){
-        activeDrawObject_->setParent(nullptr);
-        activeDrawObject_->deleteLater();
-    }
-    activeDrawObject_=object;
-    object->setParent(this);
+    layerManager_.activeObject()->setActiveObject(QSharedPointer<QMDrawObject>(object));
 }
 
 void QMCanvasScene::finishActiveDrawObject(){
-    if (activeDrawObject_){
-        addGraphic(activeDrawObject_);
-        activeDrawObject_=nullptr;
-    }
+    layerManager_.activeObject()->finishActiveObject();
 }
 
 void QMCanvasScene::inform(){
@@ -242,10 +199,9 @@ void QMCanvasScene::onVScrollBarChanged(int value){
 }
 
 void QMCanvasScene::onCtrlAndZ(){
-    if (drawObject_.isEmpty()) return;
-    deleteGraphic(graphicList().back());
+    layerManager_.activeObject()->undo();
 }
 
 void QMCanvasScene::onCtrlAndY(){
-    //重做
+    layerManager_.activeObject()->redo();
 }

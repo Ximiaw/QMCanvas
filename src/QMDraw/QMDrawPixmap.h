@@ -1,0 +1,26 @@
+// Copyright (c) 2026 Ximiaw
+// SPDX-License-Identifier: MIT
+
+#ifndef MAIN_QMDRAWPIXMAP_H
+#define MAIN_QMDRAWPIXMAP_H
+
+#include <QPixmap>
+#include "QMDrawObject.h"
+
+class QMDrawPixmap:public QMDrawObject
+{
+private:
+    QPixmap pixmap_;
+public:
+    QMDrawPixmap(QPixmap& pixmap);
+    QMDrawPixmap();
+
+    void setPixmap(QPixmap& pixmap);
+
+    void draw(QPainter* painter) override;
+    QPen* pen() const override;
+    QBrush* brush() const override;
+};
+
+
+#endif //MAIN_QMDRAWPIXMAP_H

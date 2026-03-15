@@ -24,9 +24,9 @@ public:
     bool hide() const;
     void setHide(bool hide);
 
-    T *activeObject();
-    QSharedPointer<T> setActiveObject(QSharedPointer<T> object);
-    void setActiveObject(int index);
+    virtual T *activeObject();
+    virtual QSharedPointer<T> setActiveObject(QSharedPointer<T> object);
+    virtual void switchActiveObject(int index);
 
     void finishActiveObject();
 
