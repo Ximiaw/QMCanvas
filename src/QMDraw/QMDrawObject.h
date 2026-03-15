@@ -7,8 +7,9 @@
 #include <QPainter>
 #include <QPen>
 #include <QBrush>
+#include <QObject>
 
-class QMDrawObject{
+class QMDrawObject: public QObject{
 protected:
     bool isRecord_ = false;
     QPoint begin_;

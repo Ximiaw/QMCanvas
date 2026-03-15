@@ -81,6 +81,7 @@ void LayerManager::onHideChanged(int i, bool hide){
 }
 
 QPixmap LayerManager::pixmap(){
+    if (activeItem_.isNull() || activeItem_->items().isEmpty()) return base_;
     QPixmap pixmap = base_;
     QPainter painter(&pixmap);
     painter.drawPixmap(down_.rect(),down_);

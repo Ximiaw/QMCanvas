@@ -7,13 +7,14 @@
 #include <QObject>
 #include <QList>
 #include <QSharedPointer>
+#include <QPointer>
 
 template <typename T>
 class AbstractLayer:public QObject{
 protected:
     QList<QSharedPointer<T>> items_;
     QList<QSharedPointer<T>> undoStack_;
-    QSharedPointer<T> activeItem_;
+    QPointer<T> activeItem_;
     bool hide_;
 public:
     AbstractLayer(QObject* parent = nullptr);
