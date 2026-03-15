@@ -36,7 +36,7 @@
 ***
 
 ### `bool eventFilter(QObject* watched, QEvent* event) override`
-重写事件过滤器，处理键盘快捷键（Ctrl+Z 撤销）  
+重写事件过滤器，处理键盘快捷键（Ctrl+Z 撤销、Ctrl+Y 重做）  
 *watched* — 被监视的对象  
 *event* — 事件对象  
 **Returns** — 事件已处理返回 true，否则返回 false
@@ -72,4 +72,20 @@
 ### `void mousePress(QPoint point)`
 鼠标按下时发送信号（左键按下）  
 *point* — 鼠标按下位置（相对于父窗口的坐标）
+***
+
+### `void ctrlAndZ()`
+Ctrl+Z 快捷键触发时发送信号，用于撤销操作
+***
+
+### `void ctrlAndY()`
+Ctrl+Y 快捷键触发时发送信号，用于重做操作
+***
+
+## 私有成员
+
+| 成员名 | 类型 | 说明 |
+|--------|------|------|
+| `scenePointer_` | `QPointer<QMCanvasScene>` | 关联的场景指针 |
+
 ***
