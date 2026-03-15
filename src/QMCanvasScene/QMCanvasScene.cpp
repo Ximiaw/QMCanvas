@@ -58,7 +58,7 @@ QRect QMCanvasScene::getViewportRect(){
 }
 
 void QMCanvasScene::draw(QPainter* painter){
-    QPixmap pixmap =getViewportPixmap();
+    QPixmap pixmap = getViewportPixmap();
     QRect rect = pixmap.rect();
     painter->drawPixmap(rect,pixmap);
 }
@@ -99,7 +99,6 @@ qreal QMCanvasScene::extraViewportMargin() const{
 void QMCanvasScene::setExtraViewportMargin(qreal rate){
     location_.setExtraViewportMargin(rate);
 
-
     inform();
 }
 
@@ -109,8 +108,6 @@ qreal QMCanvasScene::ratio() const{
 
 void QMCanvasScene::setRatio(qreal ratio){
     location_.setRatio(ratio);
-
-
 
     inform();
 }

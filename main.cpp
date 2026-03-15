@@ -9,8 +9,8 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     QMCanvasView cv;
     QPixmap pixmap(1000,1000);
-    QMCanvasScene* scene = new QMCanvasScene(pixmap);
     pixmap.fill(Qt::yellow);
+    QMCanvasScene* scene = new QMCanvasScene(pixmap);
     cv.setCanvasScene(scene);
     cv.resize(500,500);
     //cv.setWheelMode(WheelMode::ZOOM);
