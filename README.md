@@ -1,66 +1,199 @@
 # QMCanvas
-***
 
-基于 Qt6 的画布组件学习项目。
+一个基于 Qt6 的简易画布组件，用于学习和理解图像渲染、图层管理和视口变换的基本概念。
 
-> ⚠️ **这是一个学习项目，并未进行测试，不保证能够稳定运行。**
+> **注意**：这是一个学习项目，代码未经充分测试，仅供学习参考。
 
-## 架构
+## 项目概述
+
+QMCanvas 实现了一个支持缩放、滚动、图层管理的画布系统。它提供了基础的图像显示和交互功能，适合作为理解 Qt 图形渲染、坐标变换和图层合成的学习材料。
+
+### 主要特性
+
+- **视口渲染**：支持视口外扩预渲染，优化滚动体验
+- **图层管理**：多层图层系统，支持图层切换和隐藏控制
+- **撤销/重做**：基于栈的撤销重做机制
+- **缩放控制**：支持鼠标滚轮缩放，可配置缩放倍率范围
+- **双模式滚轮**：滚轮可在滚动视图和缩放视图两种模式间切换
+
+## 架构说明
 
 ```
-┌─────────────────────────────────────────────┐
-│              QMCanvasView                   │
-│  (QWidget - 对外接口容器)                    │
-│  ┌───────────────────────────────────────┐  │
-│  │                 View                  │  │
-│  │  (QScrollArea - 处理滚动和滚轮)        │  │
-│  │  ┌─────────────────────────────────┐  │  │
-│  │  │           Viewport              │  │  │
-│  │  │  (QWidget - 实际渲染区域)        │  │  │
-│  │  │  ┌─────────────────────────┐    │  │  │
-│  │  │  │      QMCanvasScene      │    │  │  │
-│  │  │  │  (QObject - 场景管理器)  │    │  │  │
-│  │  │  │  ┌─────────────────┐    │    │  │  │
-│  │  │  │  │    Location     │    │    │  │  │
-│  │  │  │  │  (坐标变换管理)  │    │    │  │  │
-│  │  │  │  └─────────────────┘    │    │  │  │
-│  │  │  │  ┌─────────────────┐    │    │  │  │
-│  │  │  │  │  LayerManager   │    │    │  │  │
-│  │  │  │  │ (多图层管理器)   │    │    │  │  │
-│  │  │  │  │  ┌───────────┐  │    │    │  │  │
-│  │  │  │  │  │   Layer   │  │    │    │  │  │
-│  │  │  │  │  │ (绘制图层) │  │    │    │  │  │
-│  │  │  │  │  │ ┌───────┐ │  │    │    │  │  │
-│  │  │  │  │  │ │QMDraw │ │  │    │    │  │  │
-│  │  │  │  │  │ │Object │ │  │    │    │  │  │
-│  │  │  │  │  │ └───────┘ │  │    │    │  │  │
-│  │  │  │  │  └───────────┘  │    │    │  │  │
-│  │  │  │  └─────────────────┘    │    │  │  │
-│  │  │  └─────────────────────────┘    │  │  │
-│  │  └─────────────────────────────────┘  │  │
-│  └───────────────────────────────────────┘  │
-└─────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                      QMCanvasView                           │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                        View                         │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │                  Viewport                   │    │    │
+│  │  │  ┌─────────────────────────────────────┐    │    │    │
+│  │  │  │         QMCanvasScene               │    │    │    │
+│  │  │  │  ┌─────────────────────────────┐    │    │    │    │
+│  │  │  │  │      LayerManager           │    │    │    │    │
+│  │  │  │  │  ┌─────────────────────┐    │    │    │    │    │
+│  │  │  │  │  │   Layer (多个)      │    │    │    │    │    │
+│  │  │  │  │  │  ┌─────────────┐    │    │    │    │    │    │
+│  │  │  │  │  │  │ QMDrawObject│    │    │    │    │    │    │
+│  │  │  │  │  │  └─────────────┘    │    │    │    │    │    │
+│  │  │  │  │  └─────────────────────┘    │    │    │    │    │
+│  │  │  │  └─────────────────────────────┘    │    │    │    │
+│  │  │  └─────────────────────────────────────┘    │    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-## 组件列表
+### 核心组件
 
-| 组件                                         | 说明 |
-|--------------------------------------------|------|
-| [QMCanvasView](document/QMCanvasView.md)   | 画布视图容器 |
-| [QMCanvasScene](document/QMCanvasScene.md) | 场景管理器 |
-| [Viewport](document/Viewport.md)           | 视口渲染部件 |
-| [View](document/View.md)                   | 滚动视图容器 |
-| [QMDrawObject](document/QMDrawObject.md)   | 绘制对象基类 |
-| [QMDrawPixmap](document/QMDrawPixmap.md)   | 位图绘制对象 |
-| [AbstractLayer](document/AbstractLayer.md) | 图层管理模板基类 |
-| [Layer](document/Layer.md)                 | 绘制对象图层 |
-| [LayerManager](document/LayerManager.md)   | 多图层管理器 |
-| [Location](document/Location.md)           | 位置管理和坐标变换 |
-| [WheelMode](document/WheelMode.md)         | 滚轮模式枚举 |
+| 组件 | 说明 |
+|------|------|
+| **QMCanvasView** | 顶层容器，整合 View 和 Viewport，提供统一接口 |
+| **View** | 基于 QScrollArea 的滚动视图，处理滚轮事件 |
+| **Viewport** | 实际渲染部件，负责绘制和鼠标事件转发 |
+| **QMCanvasScene** | 场景管理器，协调位置计算、图层管理和渲染 |
+| **Location** | 位置管理器，处理坐标变换、缩放和视口计算 |
+| **LayerManager** | 图层管理器，管理多个图层的合成渲染 |
+| **Layer** | 单个图层，管理该图层内的绘制对象 |
+| **QMDrawObject** | 绘制对象抽象基类，所有可绘制对象需继承此类 |
+| **QMDrawPixmap** | 位图绘制对象，用于绘制 QPixmap |
 
-## 依赖
+### 数据流
 
-- Qt6 (Core, Gui, Widgets)
-- C++17 或更高版本
+```
+鼠标/键盘事件 → Viewport → QMCanvasScene → Location/LayerManager
+                                              ↓
+                    Viewport ←  信号通知  ←  更新完成
+                       ↓
+                    重绘显示
+```
 
-***
+## 构建说明
+
+### 环境要求
+
+- Qt 6.x
+- CMake 3.16+
+- C++17 兼容的编译器
+
+### 示例构建步骤
+
+1. 克隆或下载项目源码。
+
+2. 修改 CMakeLists.txt 中的 Qt 路径：
+
+打开 `QMCanvas/CMakeLists.txt`，将以下行修改为你的 Qt6 安装路径：
+
+```cmake
+set(CMAKE_PREFIX_PATH "你的Qt6安装路径")
+```
+
+例如：
+- Windows: `set(CMAKE_PREFIX_PATH "D:/Qt/6.5.0/mingw_64")`
+- Linux: `set(CMAKE_PREFIX_PATH "/opt/Qt/6.5.0/gcc_64")`
+- macOS: `set(CMAKE_PREFIX_PATH "/Users/用户名/Qt/6.5.0/macos")`
+
+3. 创建构建目录并编译：
+
+```bash
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
+
+4. 运行：
+
+```bash
+./QMCanvasDemo
+```
+
+## 使用示例
+
+```cpp
+#include "QMCanvasView.h"
+#include "QMCanvasScene.h"
+#include <QApplication>
+#include <QPixmap>
+
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+    
+    // 创建画布视图
+    QMCanvasView canvasView;
+    
+    // 创建底图
+    QPixmap pixmap(1000, 1000);
+    pixmap.fill(Qt::yellow);
+    
+    // 创建场景并设置底图
+    QMCanvasScene* scene = new QMCanvasScene(pixmap);
+    canvasView.setCanvasScene(scene);
+    
+    // 设置视图大小
+    canvasView.resize(500, 500);
+    
+    // 配置缩放参数
+    canvasView.canvasScene()->setFactor(1.2);   // 每次缩放 20%
+    canvasView.canvasScene()->setMaxRatio(5.0); // 最大放大 5 倍
+    canvasView.canvasScene()->setMinRatio(0.1); // 最小缩小到 0.1 倍
+    
+    // 设置滚轮模式为缩放（默认是滚动）
+    // canvasView.setWheelMode(WheelMode::ZOOM);
+    
+    canvasView.show();
+    
+    return app.exec();
+}
+```
+
+## 扩展绘制对象
+
+要创建自定义绘制对象，继承 `QMDrawObject` 并实现纯虚方法：
+
+```cpp
+class MyDrawObject : public QMDrawObject {
+public:
+    void draw(QPainter* painter) override {
+        // 实现绘制逻辑
+        painter->drawLine(begin_, end_);
+    }
+    
+    QPen* pen() const override {
+        return &pen_;
+    }
+    
+    QBrush* brush() const override {
+        return &brush_;
+    }
+    
+private:
+    QPen pen_;
+    QBrush brush_;
+};
+```
+
+## 类文档
+
+- [AbstractLayer](document/AbstractLayer.md) - 图层管理模板基类
+- [Layer](document/Layer.md) - 图层类
+- [LayerManager](document/LayerManager.md) - 图层管理器
+- [Location](document/Location.md) - 位置管理类
+- [QMCanvasScene](document/QMCanvasScene.md) - 场景管理器
+- [QMCanvasView](document/QMCanvasView.md) - 画布视图容器
+- [QMDrawObject](document/QMDrawObject.md) - 绘制对象基类
+- [QMDrawPixmap](document/QMDrawPixmap.md) - 位图绘制对象
+- [View](document/View.md) - 滚动视图
+- [Viewport](document/Viewport.md) - 视口渲染部件
+- [WheelMode](document/WheelMode.md) - 滚轮模式枚举
+
+## 快捷键
+
+| 快捷键 | 功能 |
+|--------|------|
+| Ctrl + Z | 撤销 |
+| Ctrl + Y | 重做 |
+
+## 许可证
+
+MIT License
+
+Copyright (c) 2026 Ximiaw

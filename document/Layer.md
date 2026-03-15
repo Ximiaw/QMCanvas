@@ -1,21 +1,64 @@
 # Layer
 ***
 
-图层类型别名，定义为 `AbstractLayer<QMDrawObject>` 的别名。用于管理 QMDrawObject 对象的图层。
+图层类，继承自 `AbstractLayer<QMDrawObject>`。管理绘制对象的图层，提供图层位图合成和绘制对象切换功能。
 
-## 类型定义
+## 构造函数
 
-```cpp
-using Layer = AbstractLayer<QMDrawObject>;
-```
+### `Layer()`
+默认构造函数，创建空图层
+***
 
-## 说明
+## 公共方法
 
-Layer 是 AbstractLayer 模板类的具体化实例，专门用于管理 QMDrawObject 绘制对象。继承自 AbstractLayer 的所有方法和属性。
+### `QPixmap pixmap()`
+获取图层合成后的位图，将下方缓存、活动绘制对象、上方缓存按顺序合成
+**Returns** — 合成后的位图
+***
+
+### `QSharedPointer<QMDrawObject> setActiveObject(QSharedPointer<QMDrawObject> object) override`
+设置活动绘制对象，重绘下方缓存位图
+*object* — 新的活动绘制对象智能指针
+**Returns** — 原活动绘制对象智能指针
+***
+
+### `void switchActiveObject(int index) override`
+切换到指定索引的绘制对象，重绘上下方缓存位图
+*index* — 目标绘制对象索引
+***
+
+### `void finishActiveObject() override`
+完成当前活动绘制对象的绘制，将其渲染到下方缓存
+***
+
+## 继承的方法
+
+继承自 [AbstractLayer](AbstractLayer.md)：
+
+### `const QList<QSharedPointer<QMDrawObject>>& items() const`
+获取当前管理的所有绘制对象列表
+
+### `bool hide() const`
+获取当前隐藏状态
+
+### `void setHide(bool hide)`
+设置隐藏状态
+
+### `QMDrawObject* activeObject()`
+获取当前活动的绘制对象指针
+
+### `void undo()`
+撤销操作
+
+### `void redo()`
+重做操作
+
+***
 
 ## 相关类
 
 - [AbstractLayer](AbstractLayer.md) — 模板基类
 - [QMDrawObject](QMDrawObject.md) — 绘制对象基类
+- [LayerManager](LayerManager.md) — 图层管理器
 
 ***

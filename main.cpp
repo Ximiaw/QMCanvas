@@ -17,6 +17,5 @@ int main(int argc, char *argv[]) {
     cv.canvasScene()->setFactor(1.2);
     cv.show();
 
-
     return QApplication::exec();
 }

@@ -1,7 +1,7 @@
 # QMDrawPixmap
 ***
 
-位图绘制对象类，继承自 `QMDrawObject`。用于在位图上绘制另一个位图。
+位图绘制对象类，继承自 `QMDrawObject`。用于在位图上绘制另一个位图，支持全图填充或区域绘制模式。
 
 ## 构造函数
 
@@ -16,13 +16,23 @@
 
 ## 公共方法
 
+### `bool fill()`
+获取当前填充模式
+**Returns** — true 表示全图填充模式，false 表示区域绘制模式
+***
+
+### `void setFill(bool fill)`
+设置填充模式
+*fill* — true 表示全图填充，false 表示按 begin_/end_ 区域绘制
+***
+
 ### `void setPixmap(QPixmap& pixmap)`
 设置要绘制的位图
 *pixmap* — 新的位图
 ***
 
 ### `void draw(QPainter* painter) override`
-执行绘制操作，在 painter 上绘制位图，绘制区域由 begin_ 和 end_ 决定
+执行绘制操作，在 painter 上绘制位图。若 fill_ 为 true 则全图填充，否则按 begin_/end_ 区域绘制
 *painter* — QPainter 绘制对象
 ***
 
@@ -60,6 +70,7 @@
 | 成员名 | 类型 | 说明 |
 |--------|------|------|
 | `pixmap_` | `QPixmap` | 要绘制的位图 |
+| `fill_` | `bool` | 是否全图填充模式 |
 
 ## 继承的成员
 

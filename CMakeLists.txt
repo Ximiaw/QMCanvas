@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 4.1)
 
-project(Main)
+project(Test)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
@@ -19,11 +19,11 @@ include_directories(src/QMCanvasView)
 
 add_subdirectory(src)
 
-add_executable(Main
+add_executable(Test
         main.cpp
 )
 
-target_link_libraries(Main PRIVATE
+target_link_libraries(Test PRIVATE
         QMCanvas
         Qt::Core
         Qt::Gui
