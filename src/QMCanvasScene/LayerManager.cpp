@@ -21,19 +21,11 @@ bool LayerManager::hide(int index){
 QSharedPointer<Layer> LayerManager::setActiveObject(QSharedPointer<Layer> object){
     auto obj = AbstractLayer::setActiveObject(object);
     QPainter pd(&down_);
-    QPainter pu(&down_);
-    bool down = true;
+    object->setBase(base_.size());
     for (auto layers = items_.begin();layers != items_.end();layers++){
         auto layer = layers->get();
-        if (layers->isNull() || layer->hide()) continue;
-        if (layer == activeItem_.get()) down = false;
-        for (auto draw = layer->items().begin();draw!=layer->items().end();draw++){
-            if (draw->isNull()) continue;
-            if (down)
-                draw->get()->draw(&pd);
-            else
-                draw->get()->draw(&pu);
-        }
+        if (layers->isNull() || layer->hide() || layer == object.get()) continue;
+        pd.drawPixmap(layer->pixmap().rect(),layer->pixmap());
     }
     return obj;
 }
@@ -41,19 +33,16 @@ QSharedPointer<Layer> LayerManager::setActiveObject(QSharedPointer<Layer> object
 void LayerManager::switchActiveObject(int index){
     AbstractLayer::switchActiveObject(index);
     QPainter pd(&down_);
-    QPainter pu(&down_);
+    QPainter pu(&up_);
     bool down = true;
     for (auto layers = items_.begin();layers != items_.end();layers++){
         auto layer = layers->get();
         if (layers->isNull() || layer->hide()) continue;
         if (layer == activeItem_.get()) down = false;
-        for (auto draw = layer->items().begin();draw!=layer->items().end();draw++){
-            if (draw->isNull()) continue;
-            if (down)
-                draw->get()->draw(&pd);
-            else
-                draw->get()->draw(&pu);
-        }
+        if (down)
+            pd.drawPixmap(layer->pixmap().rect(),layer->pixmap());
+        else
+            pu.drawPixmap(layer->pixmap().rect(),layer->pixmap());
     }
 }
 
@@ -62,17 +51,6 @@ void LayerManager::swap(int a, int b){
     if (items_.size()<=a||a<0) return;
     if (items_.size()<=b||b<0) return;
     std::swap(items_[a],items_[b]);
-}
-
-QPixmap& LayerManager::base(){
-    return base_;
-}
-
-void LayerManager::setBase(const QSize& baseSize){
-    base_ = QPixmap(baseSize);
-    base_.fill(QColor(0,0,0,0));
-    down_ = QPixmap(base_);
-    up_ = QPixmap(base_);
 }
 
 void LayerManager::onHideChanged(int i, bool hide){

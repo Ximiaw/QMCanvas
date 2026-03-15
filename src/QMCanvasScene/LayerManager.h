@@ -15,12 +15,6 @@
 
 class LayerManager : public AbstractLayer<Layer>{
     Q_OBJECT
-private:
-    QPixmap base_;//一个透明基底，先渲染到这个上面，而后才copy需要渲染的地方
-
-    QPixmap up_;//活动图层上方的图层合并成的图，减少每帧计算数量
-    QPixmap down_;//活动图层下方的图层合并成的图，减少每帧计算数量
-
 public:
     LayerManager(QObject* parent=nullptr);
     LayerManager(const QSize& baseSize,QObject* parent=nullptr);
@@ -32,9 +26,6 @@ public:
     void switchActiveObject(int index) override;
 
     void swap(int a,int b);
-
-    QPixmap& base();//获取基底的引用，以便copy
-    void setBase(const QSize& baseSize);//必须先设置这个
 
     QPixmap pixmap();
 

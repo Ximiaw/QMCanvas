@@ -17,6 +17,19 @@ const QList<QSharedPointer<T>>& AbstractLayer<T>::items() const{
 }
 
 template <typename T>
+QPixmap AbstractLayer<T>::base(){
+    return base_;
+}
+
+template <typename T>
+void AbstractLayer<T>::setBase(const QSize& baseSize){
+    base_ = QPixmap(baseSize);
+    base_.fill(QColor(0,0,0,0));
+    down_ = QPixmap(base_);
+    up_ = QPixmap(base_);
+}
+
+template <typename T>
 bool AbstractLayer<T>::hide() const{
     return hide_;
 }
@@ -34,8 +47,15 @@ T* AbstractLayer<T>::activeObject(){
 template <typename T>
 QSharedPointer<T> AbstractLayer<T>::setActiveObject(QSharedPointer<T> object){
     if (object.isNull() || object.get() == activeItem_.get()) return nullptr;
-    auto n = QSharedPointer<T>(activeItem_.get());
-    if (items_.contains(activeItem_.get())) items_.removeOne(activeItem_.get());
+    QSharedPointer<T> n;
+    if (!activeItem_.isNull()){
+        auto it = std::find_if(items_.begin(),items_.end(),
+            [this](const QSharedPointer<T>& sp) { return sp.get() == activeItem_.get();});
+        if (it!=items_.end()){
+            n = *it;
+            items_.erase(it);
+        }
+    }
     if (items_.contains(object)) items_.removeOne(object);
     activeItem_ = QPointer<T>(object.get());
     items_.append(object);
