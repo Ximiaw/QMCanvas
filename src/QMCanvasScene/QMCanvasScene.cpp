@@ -47,7 +47,7 @@ const QPixmap QMCanvasScene::pixmap(){
 
 QPixmap QMCanvasScene::getViewportPixmap(){
     QRectF rect = location_.viewportRect();
-    QSize size = location_.viewportRectRM().size().toSize();
+    QSize size = location_.viewportRectRM().toRect().size();
     QPixmap viewportPixmap = pixmap().copy(rect.toRect())
         .scaled(size,Qt::KeepAspectRatio, Qt::FastTransformation);
     return viewportPixmap;
@@ -65,6 +65,7 @@ void QMCanvasScene::draw(QPainter* painter){
 
 void QMCanvasScene::init(QMCanvasView* canvasView,View* view,Viewport* viewport){
     view->widget()->setGeometry(location_.viewportRect().toRect());
+    location_.setViewportRect(view->viewport()->rect());
 
     connect(viewport,&Viewport::mouseMove,this,&QMCanvasScene::onMouseMove);
     connect(viewport,&Viewport::mouseRelease,this,&QMCanvasScene::onMouseRelease);
@@ -125,14 +126,14 @@ void QMCanvasScene::finishActiveDrawObject(){
 }
 
 void QMCanvasScene::inform(){
-    emit viewportRectChanged();
-    emit viewportPixmapChanged();
-
     qreal x = location_.viewportRectRM().x();
     qreal y = location_.viewportRectRM().y();
     qreal pix_w = location_.baseRect().width() * ratio();
     qreal pix_h = location_.baseRect().height() * ratio();
     emit viewPropertyChanged(QPoint(x,y),QSize(pix_w,pix_h));
+    emit viewportRectChanged();
+    emit viewportPixmapChanged();
+
 }
 
 void QMCanvasScene::onViewportChanged(QRectF rect){
@@ -164,18 +165,27 @@ void QMCanvasScene::onSizeChanged(){
 
 void QMCanvasScene::onMouseMove(QPoint point){
     if (activeDrawObject()==nullptr) return;
-    activeDrawObject()->recordPoint(point);
+    int x = point.x() / location_.ratio();
+    int y = point.y() / location_.ratio();
+    activeDrawObject()->recordPoint(QPoint(x,y));
+    inform();
 }
 
 void QMCanvasScene::onMousePress(QPoint point){
     if (activeDrawObject()==nullptr) return;
-    activeDrawObject()->begin(point);
+    int x = point.x() / location_.ratio();
+    int y = point.y() / location_.ratio();
+    activeDrawObject()->begin(QPoint(x,y));
+    inform();
 }
 
 void QMCanvasScene::onMouseRelease(QPoint point){
     if (activeDrawObject()==nullptr) return;
-    activeDrawObject()->end(point);
+    int x = point.x() / location_.ratio();
+    int y = point.y() / location_.ratio();
+    activeDrawObject()->end(QPoint(x,y));
     finishActiveDrawObject();
+    inform();
 }
 
 void QMCanvasScene::onHScrollBarChanged(int value){

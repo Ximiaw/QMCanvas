@@ -11,9 +11,13 @@ class QMDrawPixmap:public QMDrawObject
 {
 private:
     QPixmap pixmap_;
+    bool fill_;
 public:
     QMDrawPixmap(QPixmap& pixmap);
     QMDrawPixmap();
+
+    bool fill();
+    void setFill(bool fill);
 
     void setPixmap(QPixmap& pixmap);
 
