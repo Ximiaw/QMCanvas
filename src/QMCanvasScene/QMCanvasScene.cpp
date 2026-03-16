@@ -65,7 +65,7 @@ void QMCanvasScene::draw(QPainter* painter){
 
 void QMCanvasScene::init(QMCanvasView* canvasView,View* view,Viewport* viewport){
     view->widget()->setGeometry(location_.viewportRect().toRect());
-    location_.setViewportRect(view->viewport()->rect());
+    location_.setViewportRect(view->viewport()->size());
 
     connect(viewport,&Viewport::mouseMove,this,&QMCanvasScene::onMouseMove);
     connect(viewport,&Viewport::mouseRelease,this,&QMCanvasScene::onMouseRelease);
@@ -169,11 +169,7 @@ void QMCanvasScene::inform(){
 }
 
 void QMCanvasScene::onViewportChanged(QRectF rect){
-    qreal x = rect.x()/location_.ratio();
-    qreal y = rect.y()/location_.ratio();
-    qreal w = rect.width()/location_.ratio();
-    qreal h = rect.height()/location_.ratio();
-    location_.setViewportRect(QRectF(x,y,w,h));
+    location_.setViewportRect(rect);
 
     inform();
 }
@@ -222,16 +218,16 @@ void QMCanvasScene::onMouseRelease(QPoint point){
 
 void QMCanvasScene::onHScrollBarChanged(int value){
     //在原有的rect上改会出bug，疑似是因为隐式共享
-    QRectF vr = location_.viewportRect();
-    QRectF rect = QRectF(value/ratio(),vr.y(),vr.width(),vr.height());
+    QRectF vr = location_.viewportRectRM();
+    QRectF rect = QRectF(value,vr.y(),vr.width(),vr.height());
     location_.setViewportRect(rect);
 
     inform();
 }
 
 void QMCanvasScene::onVScrollBarChanged(int value){
-    QRectF vr = location_.viewportRect();
-    QRectF rect = QRectF(vr.x(),value/ratio(),vr.width(),vr.height());
+    QRectF vr = location_.viewportRectRM();
+    QRectF rect = QRectF(vr.x(),value,vr.width(),vr.height());
     location_.setViewportRect(rect);
 
     inform();

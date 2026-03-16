@@ -20,13 +20,30 @@ QRectF Location::viewportRect(){
 }
 
 void Location::setViewportRect(QRectF rect){
-    viewportRect_=rect;
+    qreal w = viewportRect_.width() * ratio();
+    qreal h = viewportRect_.height() * ratio();
+
+    qreal dx = rect.width() - w;
+    qreal dy = rect.height() - h;
+
+    qreal vx = (rect.x() + dx / 2) / ratio();
+    qreal vy = (rect.y() + dy / 2) / ratio();
+    qreal vw = (rect.width() - dx) / ratio();
+    qreal vh = (rect.height() - dy) / ratio();
+
+    viewportRect_ = QRectF(vx,vy,vw,vh);
 }
 
-QRectF Location::viewRectRM(){
+void Location::setViewportRect(QSize size){
+    viewportRect_=QRectF(viewportRect_.x(),viewportRect_.y(),size.width(),size.height());
+}
+
+QRectF Location::viewRectR(){
+    qreal x = baseRect_.x() * ratio();
+    qreal y = baseRect_.y() * ratio();
     qreal w = baseRect_.width() * ratio();
     qreal h = baseRect_.height() * ratio();
-    QRectF rect(0,0,w,h);
+    QRectF rect(x,y,w,h);
     return rect;
 }
 
@@ -51,8 +68,8 @@ QRectF Location::viewportRectRM(){
         qreal m_v_dx = mousePoint_.x() - viewportRect_.x();
         qreal m_v_dy = mousePoint_.y() - viewportRect_.y();
 
-        qreal x = m_rx - m_v_dx;
-        qreal y = m_ry - m_v_dy;
+        qreal x = m_rx - m_v_dx - dw;
+        qreal y = m_ry - m_v_dy - dh;
 
         rect.setX(x);
         rect.setY(y);

@@ -30,8 +30,9 @@ public:
 
     QRectF viewportRect();
     void setViewportRect(QRectF rect);
+    void setViewportRect(QSize size);
 
-    QRectF viewRectRM();
+    QRectF viewRectR();
     QRectF viewportRectRM();
     void setMousePoint(QPoint point);
 
