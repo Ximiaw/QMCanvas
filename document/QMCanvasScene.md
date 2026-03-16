@@ -107,18 +107,64 @@
 *ratio* — 显示倍率
 ***
 
+## 绘制对象管理
+
 ### `QMDrawObject* activeDrawObject()`
 获取当前活动的绘图对象  
 **Returns** — 活动绘图对象指针，若无则返回 nullptr
 ***
 
 ### `void setActiveDrawObject(QMDrawObject* object)`
-设置当前活动的绘图对象，会 delete 旧的活动绘图对象并设置新的父对象  
+设置当前活动的绘图对象  
 *object* — 新的活动绘图对象指针
+***
+
+### `void switchDrawObject(int i)`
+切换到指定索引的绘图对象
+*i* — 目标绘图对象索引
 ***
 
 ### `void finishActiveDrawObject()`
 完成当前活动绘图对象的绘制，将其添加到绘制对象列表中
+***
+
+## 图层管理
+
+### `Layer* activeLayer()`
+获取当前活动的图层  
+**Returns** — 活动图层指针，若无则返回 nullptr
+***
+
+### `void setActiveLayer(Layer* layer)`
+设置当前活动的图层
+*layer* — 新的活动图层指针
+***
+
+### `void switchLayer(int i)`
+切换到指定索引的图层
+*i* — 目标图层索引
+***
+
+### `void finishActiveLayer()`
+完成当前活动图层的操作
+***
+
+### `void swapLayer(int a, int b)`
+交换两个图层的位置
+*a* — 第一个图层索引
+*b* — 第二个图层索引
+***
+
+### `bool isLayerHide(int index)`
+获取指定索引图层的隐藏状态
+*index* — 图层索引
+**Returns** — true 表示隐藏，false 表示显示
+***
+
+### `void setLayerHide(int index, bool hide)`
+设置指定索引图层的隐藏状态
+*index* — 图层索引
+*hide* — true 表示隐藏，false 表示显示
 ***
 
 ## 私有方法

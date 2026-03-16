@@ -32,11 +32,16 @@
 ***
 
 ### `void setViewportRect(QRectF rect)`
-设置视口矩形
-*rect* — 新的视口矩形
+设置视口矩形，根据当前缩放倍率计算未缩放的视口坐标
+*rect* — 新的视口矩形（已缩放坐标）
 ***
 
-### `QRectF viewRectRM()`
+### `void setViewportRect(QSize size)`
+设置视口矩形大小，保持当前位置不变
+*size* — 新的视口大小
+***
+
+### `QRectF viewRectR()`
 获取经过缩放后的视图矩形（整个基础区域的缩放后大小）
 **Returns** — 缩放后的视图矩形
 ***
@@ -47,7 +52,7 @@
 ***
 
 ### `void setMousePoint(QPoint point)`
-设置鼠标位置，用于计算视口偏移
+设置鼠标位置，用于计算视口偏移（缩放时以鼠标为中心）
 *point* — 鼠标位置（未缩放坐标）
 ***
 
@@ -106,7 +111,7 @@
 | 成员名 | 类型 | 说明 |
 |--------|------|------|
 | `baseRect_` | `QRectF` | 基础区域 |
-| `viewportRect_` | `QRectF` | 原始视口矩形 |
+| `viewportRect_` | `QRectF` | 原始视口矩形（未缩放） |
 | `considerMouse_` | `bool` | 是否根据鼠标计算偏移 |
 | `mousePoint_` | `QPoint` | 鼠标位置 |
 | `factor_` | `qreal` | 每次缩放倍率 |

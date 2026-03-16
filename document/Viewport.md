@@ -36,7 +36,7 @@
 ***
 
 ### `bool eventFilter(QObject* watched, QEvent* event) override`
-重写事件过滤器，处理键盘快捷键（Ctrl+Z 撤销、Ctrl+Y 重做）  
+重写事件过滤器，处理键盘快捷键（Ctrl+Z 撤销、Ctrl+Y 重做、Ctrl+S 保存）  
 *watched* — 被监视的对象  
 *event* — 事件对象  
 **Returns** — 事件已处理返回 true，否则返回 false
@@ -80,6 +80,10 @@ Ctrl+Z 快捷键触发时发送信号，用于撤销操作
 
 ### `void ctrlAndY()`
 Ctrl+Y 快捷键触发时发送信号，用于重做操作
+***
+
+### `void save()`
+Ctrl+S 快捷键触发时发送信号，用于保存当前状态或导出图片（需自行实现）
 ***
 
 ## 私有成员

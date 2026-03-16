@@ -1,7 +1,7 @@
 # QMCanvasView
 ***
 
-画布视图容器类，继承自 `QWidget`。整合 View 和 Viewport，提供统一的画布操作接口。
+画布视图容器类，继承自 `QWidget`。整合 View 和 Viewport，提供统一的画布操作接口。支持按住 Ctrl 键临时切换滚轮模式为缩放。
 
 ## 属性
 
@@ -56,6 +56,16 @@
 ### `void resizeEvent(QResizeEvent* event) override`
 重写大小变化事件，发送 sizeChanged 信号通知场景更新  
 *event* — 大小变化事件对象
+***
+
+### `void keyPressEvent(QKeyEvent* event) override`
+重写键盘按下事件，当按下 Ctrl 键时自动切换到 ZOOM 模式  
+*event* — 键盘事件对象
+***
+
+### `void keyReleaseEvent(QKeyEvent* event) override`
+重写键盘释放事件，当释放 Ctrl 键时自动切换回 ROLL 模式  
+*event* — 键盘事件对象
 ***
 
 ## 信号

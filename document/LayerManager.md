@@ -24,6 +24,12 @@
 **Returns** — true 表示隐藏，false 表示显示，索引越界返回 true
 ***
 
+### `void setHide(int index, bool hide)`
+设置指定索引图层的隐藏状态
+*index* — 图层索引
+*hide* — true 表示隐藏，false 表示显示
+***
+
 ### `QSharedPointer<Layer> setActiveObject(QSharedPointer<Layer> object) override`
 设置活动图层，并重绘上下方图层的缓存位图
 *object* — 新的活动图层智能指针
@@ -41,16 +47,6 @@
 *b* — 第二个图层索引
 ***
 
-### `QPixmap& base()`
-获取基底位图的引用
-**Returns** — 基底位图引用
-***
-
-### `void setBase(const QSize& baseSize)`
-设置基底尺寸，初始化透明基底和上下缓存位图
-*baseSize* — 基底尺寸
-***
-
 ### `QPixmap pixmap()`
 获取合成后的位图，将下方缓存、活动图层、上方缓存按顺序合成
 **Returns** — 合成后的位图
@@ -64,12 +60,36 @@
 *hide* — 新的隐藏状态
 ***
 
-## 私有成员
+## 继承的方法
 
-| 成员名 | 类型 | 说明 |
-|--------|------|------|
-| `base_` | `QPixmap` | 透明基底位图 |
-| `up_` | `QPixmap` | 活动图层上方所有图层的合并缓存 |
-| `down_` | `QPixmap` | 活动图层下方所有图层的合并缓存 |
+继承自 [AbstractLayer](AbstractLayer.md)：
+
+### `const QList<QSharedPointer<Layer>>& items() const`
+获取当前管理的所有图层列表
+
+### `bool hide() const`
+获取当前隐藏状态（已删除，请使用 hide(int index)）
+
+### `void setHide(bool hide)`
+设置隐藏状态（已删除，请使用 setHide(int index, bool hide)）
+
+### `Layer* activeObject()`
+获取当前活动的图层指针
+
+### `void finishActiveObject()`
+完成当前活动图层的操作
+
+### `void undo()`
+撤销操作
+
+### `void redo()`
+重做操作
+
+***
+
+## 相关类
+
+- [AbstractLayer](AbstractLayer.md) — 模板基类
+- [Layer](Layer.md) — 图层类
 
 ***
