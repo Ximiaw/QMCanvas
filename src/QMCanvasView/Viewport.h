@@ -33,6 +33,7 @@ signals:
     void mousePress(QPoint point);
     void ctrlAndZ();
     void ctrlAndY();
+    void save();//ctrl+s会触发，保存当前状态还是导出图片需要自行实现
 public slots:
     void onSceneChanged(QMCanvasScene* scene);
     void onRectChanged();

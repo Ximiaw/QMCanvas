@@ -18,6 +18,11 @@ bool LayerManager::hide(int index){
     return items_.at(index).get()->hide();
 }
 
+void LayerManager::setHide(int index, bool hide){
+    if (index < 0 || index >= items_.size()) return;
+    items_.at(index).get()->setHide(hide);
+}
+
 QSharedPointer<Layer> LayerManager::setActiveObject(QSharedPointer<Layer> object){
     auto obj = AbstractLayer::setActiveObject(object);
     QPainter pd(&down_);

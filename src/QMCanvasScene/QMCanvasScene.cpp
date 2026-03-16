@@ -121,8 +121,40 @@ void QMCanvasScene::setActiveDrawObject(QMDrawObject* object){
     layerManager_.activeObject()->setActiveObject(QSharedPointer<QMDrawObject>(object));
 }
 
+void QMCanvasScene::switchDrawObject(int i){
+    layerManager_.activeObject()->switchActiveObject(i);
+}
+
 void QMCanvasScene::finishActiveDrawObject(){
     layerManager_.activeObject()->finishActiveObject();
+}
+
+Layer* QMCanvasScene::activeLayer(){
+    return layerManager_.activeObject();
+}
+
+void QMCanvasScene::setActiveLayer(Layer* layer){
+    layerManager_.setActiveObject(QSharedPointer<Layer>(layer));
+}
+
+void QMCanvasScene::switchLayer(int i){
+    layerManager_.switchActiveObject(i);
+}
+
+void QMCanvasScene::finishActiveLayer(){
+    layerManager_.finishActiveObject();
+}
+
+void QMCanvasScene::swapLayer(int a, int b){
+    layerManager_.swap(a,b);
+}
+
+bool QMCanvasScene::isLayerHide(int index){
+    return layerManager_.hide(index);
+}
+
+void QMCanvasScene::setLayerHide(int index, bool hide){
+    layerManager_.setHide(index,hide);
 }
 
 void QMCanvasScene::inform(){

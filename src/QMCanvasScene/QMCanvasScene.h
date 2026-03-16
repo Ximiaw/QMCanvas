@@ -60,8 +60,17 @@ public:
 
     QMDrawObject* activeDrawObject();
     void setActiveDrawObject(QMDrawObject* object);//会delete旧的活跃绘图对象
+    void switchDrawObject(int i);
     void finishActiveDrawObject();
 
+    Layer* activeLayer();
+    void setActiveLayer(Layer* layer);//会delete旧的活跃绘图对象
+    void switchLayer(int i);
+    void finishActiveLayer();
+
+    void swapLayer(int a,int b);
+    bool isLayerHide(int index);
+    void setLayerHide(int index,bool hide);
 private:
     void inform();//通知所有信号发送
 public slots:

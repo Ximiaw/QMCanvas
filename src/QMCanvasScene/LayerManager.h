@@ -21,6 +21,7 @@ public:
 
     bool hide(int index);
     bool hide()=delete;
+    void setHide(int index,bool hide);
 
     QSharedPointer<Layer> setActiveObject(QSharedPointer<Layer> object) override;
     void switchActiveObject(int index) override;

@@ -32,6 +32,9 @@ bool Viewport::eventFilter(QObject* watched, QEvent* event){
         if (modifiers == Qt::ControlModifier && key == Qt::Key_Y) {
             emit ctrlAndY();
         }
+        if (modifiers == Qt::ControlModifier && key == Qt::Key_S) {
+            emit save();
+        }
         update();
     }
     return QWidget::eventFilter(watched, event);
