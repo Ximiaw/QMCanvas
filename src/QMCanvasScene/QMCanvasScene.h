@@ -74,7 +74,6 @@ public:
 private:
     void inform();//通知所有信号发送
 public slots:
-    void onViewportChanged(QRectF rect);//需要在这里处理外扩
     void onScaleBy(bool magnify,QPoint point);
     void onSizeChanged();
     void onMouseMove(QPoint point);
@@ -85,7 +84,7 @@ public slots:
     void onCtrlAndZ();
     void onCtrlAndY();
 signals:
-    void viewportRectChanged();//onViewportChanged和onScaleBy以及view的滚动条滚动触发
+    void viewportRectChanged();//onScaleBy以及view的滚动条滚动触发
     void viewportPixmapChanged();
     void viewPropertyChanged(QPoint point,QSize size);//通知view更新滚动条和缩放
 };

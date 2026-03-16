@@ -21,21 +21,11 @@ void View::wheelEvent(QWheelEvent *event) {
     switch (wheelMode()) {
         case WheelMode::ROLL:
             QScrollArea::wheelEvent(event);
-            translation();
             break;
         case WheelMode::ZOOM:
             factor(event);
             break;
     }
-}
-
-void View::translation(){
-    QRect rect(
-        horizontalScrollBar()->value()
-        ,verticalScrollBar()->value()
-        ,viewport()->width()
-        ,viewport()->height());
-    emit viewportChanged(rect);
 }
 
 void View::factor(QWheelEvent *event) {

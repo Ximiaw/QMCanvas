@@ -33,7 +33,6 @@ public:
 protected:
     void wheelEvent(QWheelEvent *event) override;
 private:
-    void translation();
     void factor(QWheelEvent *event);
 public slots:
     void onPropertyChanged(QPoint point,QSize size);

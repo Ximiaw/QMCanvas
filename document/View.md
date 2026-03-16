@@ -34,10 +34,6 @@
 
 ## 私有方法
 
-### `void translation()`
-处理视图平移，计算当前视口矩形并发送 viewportChanged 信号
-***
-
 ### `void factor(QWheelEvent *event)`
 处理视图缩放，根据滚轮角度计算缩放方向并发送 scaleFactorChanged 信号  
 *event* — 滚轮事件对象，用于获取滚轮旋转角度
@@ -52,11 +48,6 @@
 ***
 
 ## 信号
-
-### `void viewportChanged(QRectF rect)`
-视口区域变化时发送信号  
-*rect* — 新的视口矩形（场景坐标系）
-***
 
 ### `void scaleFactorChanged(bool magnify, QPoint point)`
 缩放因子变化时发送信号  

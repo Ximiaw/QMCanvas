@@ -175,11 +175,6 @@
 
 ## 公共槽函数
 
-### `void onViewportChanged(QRectF rect)`
-视口几何变化时调用，内部更新可见性判断区域并处理外扩  
-*rect* — 新的视口矩形（场景坐标系）
-***
-
 ### `void onScaleBy(bool magnify, QPoint point)`
 相对缩放时调用，根据 magnify 执行放大或缩小操作  
 *magnify* — 缩放判断，true 表示放大，false 表示缩小  
@@ -226,7 +221,7 @@
 ## 信号
 
 ### `void viewportRectChanged()`
-视口矩形变化时发送信号（由 onViewportChanged、onScaleBy 和滚动条变化触发）
+视口矩形变化时发送信号（由 onScaleBy 和滚动条变化触发）
 ***
 
 ### `void viewportPixmapChanged()`

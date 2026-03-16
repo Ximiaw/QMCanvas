@@ -75,7 +75,6 @@ void QMCanvasScene::init(QMCanvasView* canvasView,View* view,Viewport* viewport)
     connect(this,&QMCanvasScene::viewportRectChanged,viewport,&Viewport::onRectChanged);
     connect(this,&QMCanvasScene::viewportPixmapChanged,viewport,&Viewport::onPixmapChanged);
 
-    connect(view,&View::viewportChanged,this,&QMCanvasScene::onViewportChanged);
     connect(view,&View::scaleFactorChanged,this,&QMCanvasScene::onScaleBy);
     connect(view->horizontalScrollBar(),&QScrollBar::valueChanged,this,&QMCanvasScene::onHScrollBarChanged);
     connect(view->verticalScrollBar(),&QScrollBar::valueChanged,this,&QMCanvasScene::onVScrollBarChanged);
@@ -164,12 +163,6 @@ void QMCanvasScene::inform(){
     emit viewPropertyChanged(QPoint(x,y),size.toSize());
     emit viewportRectChanged();
     emit viewportPixmapChanged();
-}
-
-void QMCanvasScene::onViewportChanged(QRectF rect){
-    location_.setViewportRect(rect);
-
-    inform();
 }
 
 void QMCanvasScene::onScaleBy(bool magnify, QPoint point){
