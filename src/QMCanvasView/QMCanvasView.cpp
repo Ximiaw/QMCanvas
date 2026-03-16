@@ -59,3 +59,17 @@ void QMCanvasView::resizeEvent(QResizeEvent* event){
     QWidget::resizeEvent(event);
     emit sizeChanged(viewport()->size());
 }
+
+void QMCanvasView::keyPressEvent(QKeyEvent* event){
+    if (event->key() == Qt::Key_Control){
+        setWheelMode(WheelMode::ZOOM);
+    }
+    QWidget::keyPressEvent(event);
+}
+
+void QMCanvasView::keyReleaseEvent(QKeyEvent* event){
+    if (event->key() == Qt::Key_Control){
+        setWheelMode(WheelMode::ROLL);
+    }
+    QWidget::keyReleaseEvent(event);
+}
