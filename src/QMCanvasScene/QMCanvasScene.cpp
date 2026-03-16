@@ -164,7 +164,6 @@ void QMCanvasScene::inform(){
     emit viewPropertyChanged(QPoint(x,y),size.toSize());
     emit viewportRectChanged();
     emit viewportPixmapChanged();
-
 }
 
 void QMCanvasScene::onViewportChanged(QRectF rect){
