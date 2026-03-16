@@ -80,13 +80,14 @@ void AbstractLayer<T>::undo(){
     if (items_.isEmpty()) return;
     undoStack_.append(items_.takeLast());
     activeItem_ = QPointer<T>(nullptr);
+    update();
 }
 
 template <typename T>
 void AbstractLayer<T>::redo(){
     if (undoStack_.isEmpty()) return;
     items_.append(undoStack_.takeLast());
-    activeItem_ = QPointer<T>(items_.back().get());
+    update();
 }
 
 template class AbstractLayer<QMDrawObject>;

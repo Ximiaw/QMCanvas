@@ -26,6 +26,17 @@
 **Returns** — 对象智能指针列表的常量引用
 ***
 
+### `QPixmap base()`
+获取当前基底位图  
+**Returns** — 基底位图副本
+***
+
+### `void setBase(const QSize& baseSize)`
+设置基底尺寸，创建透明背景位图，并重置上下方缓存位图  
+*baseSize* — 基底尺寸（宽度和高度）
+***
+
+
 ### `bool hide() const`
 获取当前隐藏状态
 **Returns** — true 表示隐藏，false 表示显示
@@ -61,7 +72,12 @@
 ***
 
 ### `void redo()`
-重做操作，将撤销栈最后一个对象移回列表，并设为活动对象
+重做操作，将撤销栈最后一个对象移回列表
+***
+
+### `virtual void update() = 0`
+纯虚函数，更新图层缓存和合成  
+子类必须实现此方法以重绘上下方缓存位图
 ***
 
 ## 保护成员
@@ -70,7 +86,10 @@
 |--------|------|------|
 | `items_` | `QList<QSharedPointer<T>>` | 管理的对象列表 |
 | `undoStack_` | `QList<QSharedPointer<T>>` | 撤销栈 |
-| `activeItem_` | `QSharedPointer<T>` | 当前活动对象 |
+| `activeItem_` | `QPointer<T>` | 当前活动对象（使用 QPointer 自动置空） |
+| `base_` | `QPixmap` | 基底位图，图层合成的底层画布 |
+| `up_` | `QPixmap` | 活动图层上方的图层合并成的缓存图，减少每帧计算数量 |
+| `down_` | `QPixmap` | 活动图层下方的图层合并成的缓存图，减少每帧计算数量 |
 | `hide_` | `bool` | 隐藏状态标志 |
 
 ***

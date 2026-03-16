@@ -41,6 +41,8 @@ public:
 
     virtual void undo();
     virtual void redo();
+
+    virtual void update() = 0;
 };
 
 #endif //MAIN_ABSTRACTLAYER_H

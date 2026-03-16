@@ -37,18 +37,7 @@ QSharedPointer<Layer> LayerManager::setActiveObject(QSharedPointer<Layer> object
 
 void LayerManager::switchActiveObject(int index){
     AbstractLayer::switchActiveObject(index);
-    QPainter pd(&down_);
-    QPainter pu(&up_);
-    bool down = true;
-    for (auto layers = items_.begin();layers != items_.end();layers++){
-        auto layer = layers->get();
-        if (layers->isNull() || layer->hide()) continue;
-        if (layer == activeItem_.get()) down = false;
-        if (down)
-            pd.drawPixmap(layer->pixmap().rect(),layer->pixmap());
-        else
-            pu.drawPixmap(layer->pixmap().rect(),layer->pixmap());
-    }
+    update();
 }
 
 void LayerManager::swap(int a, int b){
@@ -68,14 +57,24 @@ QPixmap LayerManager::pixmap(){
     QPixmap pixmap = base_;
     QPainter painter(&pixmap);
     painter.drawPixmap(down_.rect(),down_);
-    // for (auto draw = activeItem_->items().begin();
-    //     !activeItem_.get()->hide() && draw!=activeItem_->items().end();
-    //     draw++){
-    //     if (draw->isNull()) continue;
-    //     draw->get()->draw(&painter);
-    // }
     if (!activeItem_.isNull())
         painter.drawPixmap(activeItem_->pixmap().rect(),activeItem_->pixmap());
     painter.drawPixmap(up_.rect(),up_);
     return pixmap;
+}
+
+void LayerManager::update(){
+    setBase(base_.size());
+    QPainter pd(&down_);
+    QPainter pu(&up_);
+    bool down = true;
+    for (auto layers = items_.begin();layers != items_.end();layers++){
+        auto layer = layers->get();
+        if (layers->isNull() || layer->hide()) continue;
+        if (layer == activeItem_.get()) down = false;
+        if (down)
+            pd.drawPixmap(layer->pixmap().rect(),layer->pixmap());
+        else
+            pu.drawPixmap(layer->pixmap().rect(),layer->pixmap());
+    }
 }

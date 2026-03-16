@@ -28,6 +28,17 @@ QSharedPointer<QMDrawObject> Layer::setActiveObject(QSharedPointer<QMDrawObject>
 
 void Layer::switchActiveObject(int index){
     AbstractLayer::switchActiveObject(index);
+    update();
+}
+
+void Layer::finishActiveObject(){
+    QPainter painter(&down_);
+    activeItem_.get()->draw(&painter);
+    AbstractLayer::finishActiveObject();
+}
+
+void Layer::update(){
+    setBase(base_.size());
     QPainter pd(&down_);
     QPainter pu(&up_);
     bool down = true;
@@ -39,10 +50,4 @@ void Layer::switchActiveObject(int index){
         else
             draw->get()->draw(&pu);
     }
-}
-
-void Layer::finishActiveObject(){
-    QPainter painter(&down_);
-    activeItem_.get()->draw(&painter);
-    AbstractLayer::finishActiveObject();
 }

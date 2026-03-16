@@ -17,6 +17,7 @@ public:
     QSharedPointer<QMDrawObject> setActiveObject(QSharedPointer<QMDrawObject> object) override;
     void switchActiveObject(int index) override;
     void finishActiveObject() override;
+    void update() override;
 };
 
 #endif //MAIN_LAYER_H
