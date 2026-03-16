@@ -42,13 +42,13 @@
 ***
 
 ### `QSharedPointer<T> setActiveObject(QSharedPointer<T> object)`
-设置活动对象，将原活动对象从列表中移除（若存在），并将新对象添加到列表末尾
-*object* — 新的活动对象智能指针
+设置活动对象，将原活动对象从列表中移除（若存在），并将新对象添加到列表末尾  
+*object* — 新的活动对象智能指针  
 **Returns** — 原活动对象智能指针，若原对象不存在则返回空指针
 ***
 
 ### `void switchActiveObject(int index)`
-切换到指定索引的对象作为活动对象
+切换到指定索引的对象作为活动对象  
 *index* — 目标对象在列表中的索引
 ***
 

@@ -12,18 +12,18 @@
 ## 公共方法
 
 ### `QPixmap pixmap()`
-获取图层合成后的位图，将下方缓存、活动绘制对象、上方缓存按顺序合成
+获取图层合成后的位图，将下方缓存、活动绘制对象、上方缓存按顺序合成  
 **Returns** — 合成后的位图
 ***
 
 ### `QSharedPointer<QMDrawObject> setActiveObject(QSharedPointer<QMDrawObject> object) override`
-设置活动绘制对象，重绘下方缓存位图
-*object* — 新的活动绘制对象智能指针
+设置活动绘制对象，重绘下方缓存位图  
+*object* — 新的活动绘制对象智能指针  
 **Returns** — 原活动绘制对象智能指针
 ***
 
 ### `void switchActiveObject(int index) override`
-切换到指定索引的绘制对象，重绘上下方缓存位图
+切换到指定索引的绘制对象，重绘上下方缓存位图  
 *index* — 目标绘制对象索引
 ***
 

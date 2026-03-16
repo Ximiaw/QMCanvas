@@ -120,7 +120,7 @@
 ***
 
 ### `void switchDrawObject(int i)`
-切换到指定索引的绘图对象
+切换到指定索引的绘图对象  
 *i* — 目标绘图对象索引
 ***
 
@@ -136,12 +136,12 @@
 ***
 
 ### `void setActiveLayer(Layer* layer)`
-设置当前活动的图层
+设置当前活动的图层  
 *layer* — 新的活动图层指针
 ***
 
 ### `void switchLayer(int i)`
-切换到指定索引的图层
+切换到指定索引的图层  
 *i* — 目标图层索引
 ***
 
@@ -150,20 +150,20 @@
 ***
 
 ### `void swapLayer(int a, int b)`
-交换两个图层的位置
-*a* — 第一个图层索引
+交换两个图层的位置  
+*a* — 第一个图层索引  
 *b* — 第二个图层索引
 ***
 
 ### `bool isLayerHide(int index)`
-获取指定索引图层的隐藏状态
-*index* — 图层索引
+获取指定索引图层的隐藏状态  
+*index* — 图层索引  
 **Returns** — true 表示隐藏，false 表示显示
 ***
 
 ### `void setLayerHide(int index, bool hide)`
-设置指定索引图层的隐藏状态
-*index* — 图层索引
+设置指定索引图层的隐藏状态  
+*index* — 图层索引  
 *hide* — true 表示隐藏，false 表示显示
 ***
 
