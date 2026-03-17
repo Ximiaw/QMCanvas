@@ -17,6 +17,7 @@ QPixmap Layer::pixmap(){
 }
 
 QSharedPointer<QMDrawObject> Layer::setActiveObject(QSharedPointer<QMDrawObject> object){
+    down_ = QPixmap(base_);
     QPainter pd(&down_);
     auto obj = AbstractLayer::setActiveObject(object);
     for (auto draw = items().begin();draw!=items().end();draw++){
@@ -32,11 +33,22 @@ void Layer::switchActiveObject(int index){
 }
 
 void Layer::finishActiveObject(){
+    if (activeItem_.isNull()) return;
     QPainter painter(&down_);
-    activeItem_.get()->draw(&painter);
-    auto obj = activeItem_.get();
+    activeItem_->draw(&painter);
+    auto ptr = activeItem_->clone();
     AbstractLayer::finishActiveObject();
-    setActiveObject(QSharedPointer<QMDrawObject>(obj->clone()));
+    painter.end();
+    setActiveObject(QSharedPointer<QMDrawObject>(ptr));
+}
+
+void Layer::undo(){
+    QSharedPointer<QMDrawObject> ptr=nullptr;
+    if (!activeItem_.isNull())
+        ptr = activeItem_->clone();
+    AbstractLayer::undo();
+    setActiveObject(ptr);
+    update();
 }
 
 void Layer::update(){
@@ -55,8 +67,10 @@ void Layer::update(){
 }
 
 void Layer::clear(){
-    auto obj = activeItem_->clone();
+    QSharedPointer<QMDrawObject> ptr=nullptr;
+    if (!activeItem_.isNull())
+        ptr = activeItem_->clone();
     items_.clear();
-    setActiveObject(QSharedPointer<QMDrawObject>(obj));
+    setActiveObject(ptr);
     update();
 }

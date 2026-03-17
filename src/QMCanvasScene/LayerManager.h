@@ -25,6 +25,7 @@ public:
 
     QSharedPointer<Layer> setActiveObject(QSharedPointer<Layer> object) override;
     void switchActiveObject(int index) override;
+    void finishActiveObject() override;
 
     void update() override;
     void swap(int a,int b);

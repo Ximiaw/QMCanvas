@@ -48,8 +48,8 @@ QBrush* QMDrawPixmap::brush(){
     return nullptr;
 }
 
-QMDrawObject* QMDrawPixmap::clone(){
+QSharedPointer<QMDrawObject> QMDrawPixmap::clone(){
     auto ptr = new QMDrawPixmap(pixmap_);
     ptr->setFill(fill_);
-    return ptr;
+    return QSharedPointer<QMDrawObject>(ptr);
 }

@@ -2,279 +2,236 @@
 // SPDX-License-Identifier: MIT
 
 #include "demo.h"
-
-// demo.cpp
-#include "demo.h"
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QGroupBox>
-#include <QLabel>
-#include <QColorDialog>
 #include <QFileDialog>
 #include <QMessageBox>
-#include "QMDrawPen.h"
-#include "QMDrawRect.h"
-#include "QMDrawPixmap.h"
+#include <QApplication>
+#include <QKeySequence>
 
-Demo::Demo(QWidget *parent)
-    : QMainWindow(parent)
-    , canvasView_(nullptr)
-    , scene_(nullptr)
-    , currentColor_(Qt::black)
-    , currentLayerId_(0) {
-
-    // 创建默认场景（500x500 透明画布）
-    QPixmap initialPixmap(800, 600);
-    initialPixmap.fill(QColor(255, 255, 255));
-
-    scene_ = new QMCanvasScene(initialPixmap, this);
-    canvasView_ = new QMCanvasView(scene_, this);
+DemoWindow::DemoWindow(QWidget *parent)
+    : QMainWindow(parent) {
 
     setupUI();
     setupConnections();
 
-    // 初始化第一个绘图工具（画笔）
-    onToolChanged(0);
-
     setWindowTitle("QMCanvas 绘图演示");
     resize(1200, 800);
+
+    QPixmap pixmap(800, 600);
+    pixmap.fill(Qt::white);
+    scene_ = new QMCanvasScene(pixmap, this);
+    canvasView_->setCanvasScene(scene_);
+
+    canvasView_->setViewportBackground();
+
+    updateStatus();
 }
 
-Demo::~Demo() = default;
+DemoWindow::~DemoWindow() = default;
 
-void Demo::setupUI() {
+void DemoWindow::setupUI() {
     auto *centralWidget = new QWidget(this);
-    auto *mainLayout = new QHBoxLayout(centralWidget);
+    setCentralWidget(centralWidget);
 
-    // 左侧工具栏
-    auto *leftPanel = new QGroupBox("工具箱", this);
-    auto *leftLayout = new QVBoxLayout(leftPanel);
+    auto *mainLayout = new QVBoxLayout(centralWidget);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
 
-    // 工具选择
-    auto *toolLabel = new QLabel("选择工具:", this);
+    canvasView_ = new QMCanvasView(this);
+    mainLayout->addWidget(canvasView_);
+
+    auto *toolbar = addToolBar("工具栏");
+    toolbar->setMovable(false);
+
+    toolbar->addWidget(new QLabel(" 工具: ", this));
     toolCombo_ = new QComboBox(this);
     toolCombo_->addItem("画笔", 0);
     toolCombo_->addItem("矩形", 1);
-    toolCombo_->addItem("图片", 2);
-    leftLayout->addWidget(toolLabel);
-    leftLayout->addWidget(toolCombo_);
+    toolCombo_->addItem("椭圆(矩形模拟)", 2);
+    toolbar->addWidget(toolCombo_);
 
-    // 颜色选择
-    auto *colorLabel = new QLabel("颜色:", this);
-    colorBtn_ = new QPushButton(this);
-    colorBtn_->setStyleSheet(QString("background-color: %1; min-height: 30px;").arg(currentColor_.name()));
-    leftLayout->addWidget(colorLabel);
-    leftLayout->addWidget(colorBtn_);
+    toolbar->addSeparator();
 
-    // 线宽
-    auto *widthLabel = new QLabel("线宽:", this);
+    toolbar->addWidget(new QLabel(" 粗细: ", this));
     widthSpin_ = new QSpinBox(this);
     widthSpin_->setRange(1, 50);
     widthSpin_->setValue(3);
-    leftLayout->addWidget(widthLabel);
-    leftLayout->addWidget(widthSpin_);
+    toolbar->addWidget(widthSpin_);
 
-    leftLayout->addStretch();
+    toolbar->addSeparator();
 
-    // 中央画布
-    auto *canvasContainer = new QWidget(this);
-    auto *canvasLayout = new QVBoxLayout(canvasContainer);
-    canvasLayout->addWidget(canvasView_);
+    toolbar->addWidget(new QLabel(" 颜色: ", this));
+    colorBtn_ = new QPushButton(this);
+    colorBtn_->setFixedSize(30, 30);
+    colorBtn_->setStyleSheet(QString("background-color: %1").arg(currentColor_.name()));
+    toolbar->addWidget(colorBtn_);
 
-    // 右侧图层面板
-    auto *rightPanel = new QGroupBox("图层管理", this);
-    auto *rightLayout = new QVBoxLayout(rightPanel);
+    toolbar->addSeparator();
 
-    // 图层列表
-    layerList_ = new QListWidget(this);
-    layerList_->setMaximumHeight(300);
-    rightLayout->addWidget(layerList_);
+    auto *fillAction = toolbar->addAction("填充");
+    fillAction->setCheckable(true);
+    connect(fillAction, &QAction::toggled, this, &DemoWindow::onFillChanged);
 
-    // 图层按钮
-    auto *layerBtnLayout = new QHBoxLayout();
-    addLayerBtn_ = new QPushButton("添加", this);
-    delLayerBtn_ = new QPushButton("删除", this);
-    layerBtnLayout->addWidget(addLayerBtn_);
-    layerBtnLayout->addWidget(delLayerBtn_);
-    rightLayout->addLayout(layerBtnLayout);
+    toolbar->addSeparator();
 
-    rightLayout->addSpacing(20);
+    toolbar->addAction("新建图层", this, &DemoWindow::onNewLayer);
+    toolbar->addAction("清空当前", this, &DemoWindow::onClearLayer);
 
-    // 操作按钮
-    undoBtn_ = new QPushButton("撤销 (Ctrl+Z)", this);
-    redoBtn_ = new QPushButton("重做 (Ctrl+Y)", this);
-    clearBtn_ = new QPushButton("清空当前层", this);
-    saveBtn_ = new QPushButton("保存图片", this);
+    toolbar->addSeparator();
 
-    rightLayout->addWidget(undoBtn_);
-    rightLayout->addWidget(redoBtn_);
-    rightLayout->addWidget(clearBtn_);
-    rightLayout->addWidget(saveBtn_);
-    rightLayout->addStretch();
+    toolbar->addAction("撤销 (Ctrl+Z)", this, &DemoWindow::onUndo);
+    toolbar->addAction("重做 (Ctrl+Y)", this, &DemoWindow::onRedo);
 
-    // 添加到主布局
-    mainLayout->addWidget(leftPanel, 1);
-    mainLayout->addWidget(canvasContainer, 5);
-    mainLayout->addWidget(rightPanel, 1);
+    toolbar->addSeparator();
 
-    setCentralWidget(centralWidget);
+    toolbar->addAction("放大", this, &DemoWindow::onZoomIn);
+    toolbar->addAction("缩小", this, &DemoWindow::onZoomOut);
+    toolbar->addAction("保存", this, &DemoWindow::onSaveImage);
 
-    // 初始化图层列表
-    updateLayerList();
+    statusBar()->showMessage("就绪");
+
+    statusLabel_ = new QLabel("当前工具: 画笔", this);
+    zoomLabel_ = new QLabel("缩放: 100%", this);
+    statusBar()->addPermanentWidget(statusLabel_);
+    statusBar()->addPermanentWidget(zoomLabel_);
 }
 
-void Demo::setupConnections() {
+void DemoWindow::setupConnections() {
     connect(toolCombo_, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &Demo::onToolChanged);
-    connect(colorBtn_, &QPushButton::clicked, this, &Demo::onColorChanged);
+            this, &DemoWindow::onToolChanged);
+    connect(colorBtn_, &QPushButton::clicked, this, &DemoWindow::onColorChanged);
     connect(widthSpin_, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &Demo::onWidthChanged);
+            this, &DemoWindow::onWidthChanged);
 
-    connect(addLayerBtn_, &QPushButton::clicked, this, &Demo::onAddLayer);
-    connect(delLayerBtn_, &QPushButton::clicked, this, &Demo::onDeleteLayer);
-    connect(layerList_, &QListWidget::itemChanged, this, &Demo::onLayerItemChanged);
-    connect(layerList_, &QListWidget::currentRowChanged, this, &Demo::onLayerSelectionChanged);
+    // 修复：为 QShortcut 设置父对象，避免内存泄漏警告
+    auto *undoShortcut = new QShortcut(QKeySequence("Ctrl+Z"), this);
+    auto *redoShortcut = new QShortcut(QKeySequence("Ctrl+Y"), this);
+    auto *saveShortcut = new QShortcut(QKeySequence("Ctrl+S"), this);
 
-    connect(undoBtn_, &QPushButton::clicked, this, &Demo::onUndo);
-    connect(redoBtn_, &QPushButton::clicked, this, &Demo::onRedo);
-    connect(clearBtn_, &QPushButton::clicked, this, &Demo::onClearCanvas);
-    connect(saveBtn_, &QPushButton::clicked, this, &Demo::onSaveImage);
+    connect(undoShortcut, &QShortcut::activated, this, &DemoWindow::onUndo);
+    connect(redoShortcut, &QShortcut::activated, this, &DemoWindow::onRedo);
+    connect(saveShortcut, &QShortcut::activated, this, &DemoWindow::onSaveImage);
 }
 
-void Demo::onToolChanged(int index) {
-    if (!scene_ || !scene_->activeLayer()) return;
+void DemoWindow::onToolChanged(int index) {
+    if (!scene_) return;
 
-    QMDrawObject *drawObject = nullptr;
+    QMDrawObject *tool = nullptr;
 
     switch (index) {
-        case 0: { // 画笔
-            drawObject = new QMDrawPen(currentColor_, widthSpin_->value());
+        case 0: {
+            tool = new QMDrawPen(currentColor_, currentWidth_);
+            statusLabel_->setText("当前工具: 画笔");
             break;
         }
-        case 1: { // 矩形
-            drawObject = new QMDrawRect(currentColor_, widthSpin_->value(), false);
+        case 1: {
+            tool = new QMDrawRect(currentColor_, currentWidth_, fillRect_);
+            statusLabel_->setText("当前工具: 矩形");
             break;
         }
-        case 2: { // 图片（示例：加载一个默认图片或选择文件）
-            QString fileName = QFileDialog::getOpenFileName(this, "选择图片", "",
-                "Images (*.png *.xpm *.jpg *.jpeg)");
-            if (fileName.isEmpty()) return;
-
-            QPixmap pixmap(fileName);
-            if (pixmap.isNull()) {
-                QMessageBox::warning(this, "错误", "无法加载图片");
-                return;
-            }
-            auto *pixmapObj = new QMDrawPixmap(pixmap);
-            pixmapObj->setFill(true);
-            drawObject = pixmapObj;
+        case 2: {
+            tool = new QMDrawRect(currentColor_, currentWidth_, fillRect_);
+            statusLabel_->setText("当前工具: 矩形(椭圆占位)");
             break;
         }
+        default:  // 修复：处理默认情况
+            qWarning() << "Unknown tool index:" << index;
+            tool = new QMDrawPen(currentColor_, currentWidth_);
+            statusLabel_->setText("当前工具: 画笔(默认)");
+            break;
     }
 
-    if (drawObject) {
-        scene_->setActiveDrawObject(drawObject);
+    if (tool) {
+        scene_->setActiveDrawObject(tool);
     }
 }
 
-void Demo::onColorChanged() {
+void DemoWindow::onColorChanged() {
     QColor color = QColorDialog::getColor(currentColor_, this, "选择颜色");
     if (color.isValid()) {
         currentColor_ = color;
-        colorBtn_->setStyleSheet(QString("background-color: %1; min-height: 30px;").arg(color.name()));
-        // 重新创建当前工具以应用新颜色
+        colorBtn_->setStyleSheet(QString("background-color: %1").arg(color.name()));
         onToolChanged(toolCombo_->currentIndex());
     }
 }
 
-void Demo::onWidthChanged(int width) {
-    Q_UNUSED(width)
-    // 重新创建当前工具以应用新线宽
+void DemoWindow::onWidthChanged(int width) {
+    currentWidth_ = width;
     onToolChanged(toolCombo_->currentIndex());
 }
 
-void Demo::onAddLayer() {
+void DemoWindow::onFillChanged(bool fill) {
+    fillRect_ = fill;
+    int currentTool = toolCombo_->currentIndex();
+    if (currentTool == 1 || currentTool == 2) {
+        onToolChanged(currentTool);
+    }
+}
+
+void DemoWindow::onNewLayer() {
     if (!scene_) return;
 
-    auto *newLayer = new Layer();
-    scene_->setActiveLayer(newLayer);
-    updateLayerList();
-
-    // 选中新添加的图层（最后一个）
-    layerList_->setCurrentRow(layerList_->count() - 1);
+    scene_->finishActiveLayer();
+    statusBar()->showMessage("新建图层已创建", 2000);
 }
 
-void Demo::onDeleteLayer() {
-    int row = layerList_->currentRow();
-    if (row < 0 || !scene_) return;
+void DemoWindow::onClearLayer() {
+    if (!scene_) return;
 
-    // 注意：当前实现没有直接删除图层的接口，这里只是隐藏示例
-    // 实际项目中应该实现 LayerManager 的删除功能
-    scene_->setLayerHide(row, true);
-    updateLayerList();
-}
-
-void Demo::onLayerItemChanged(QListWidgetItem *item) {
-    if (!item || !scene_) return;
-
-    int index = layerList_->row(item);
-    bool visible = item->checkState() == Qt::Checked;
-    scene_->setLayerHide(index, !visible);
-}
-
-void Demo::onLayerSelectionChanged() {
-    int row = layerList_->currentRow();
-    if (row < 0 || !scene_) return;
-
-    scene_->switchLayer(row);
-    currentLayerId_ = row;
-}
-
-void Demo::onUndo() {
-    if (scene_) {
-        scene_->onCtrlAndZ();
+    // 修复：将变量移动到 if 语句中，缩小作用域
+    if (auto *layer = scene_->activeLayer(); layer != nullptr) {
+        layer->clear();
+        canvasView_->updateViewport();
+        statusBar()->showMessage("当前图层已清空", 2000);
     }
 }
 
-void Demo::onRedo() {
-    if (scene_) {
-        scene_->onCtrlAndY();
+void DemoWindow::onSaveImage() {
+    if (!scene_) return;
+
+    QString fileName = QFileDialog::getSaveFileName(this,
+        "保存图像",
+        "untitled.png",
+        "PNG 图像 (*.png);;JPEG 图像 (*.jpg *.jpeg);;BMP 图像 (*.bmp)");
+
+    if (!fileName.isEmpty()) {
+        QPixmap pixmap = scene_->pixmap();
+        if (pixmap.save(fileName)) {
+            statusBar()->showMessage(QString("已保存到: %1").arg(fileName), 3000);
+        } else {
+            QMessageBox::critical(this, "错误", "保存图像失败！");
+        }
     }
 }
 
-void Demo::onClearCanvas() {
-    // 清空当前图层的所有绘制对象
-    scene_->activeLayer()->clear();
+void DemoWindow::onUndo() {
+    if (!scene_) return;
+    scene_->onCtrlAndZ();
     canvasView_->updateViewport();
+    statusBar()->showMessage("撤销", 1000);
 }
 
-void Demo::onSaveImage() {
-    QString fileName = QFileDialog::getSaveFileName(this, "保存图片", "output.png",
-        "PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)");
-    if (fileName.isEmpty()) return;
-
-    QPixmap pixmap = scene_->pixmap();
-    if (pixmap.save(fileName)) {
-        QMessageBox::information(this, "成功", "图片已保存");
-    } else {
-        QMessageBox::warning(this, "错误", "保存失败");
-    }
-}
-
-void Demo::updateLayerList() {
+void DemoWindow::onRedo() {
     if (!scene_) return;
+    scene_->onCtrlAndY();
+    canvasView_->updateViewport();
+    statusBar()->showMessage("重做", 1000);
+}
 
-    layerList_->clear();
-    LayerManager *lm = nullptr;
-    // 通过 scene 获取 LayerManager（需要添加 getter 或修改访问权限）
-    // 这里简化处理，假设我们知道有若干图层
+void DemoWindow::onZoomIn() {
+    if (!scene_) return;
+    scene_->onScaleBy(true, QPoint(400, 300));
+    updateStatus();
+}
 
-    // 由于 LayerManager 是私有的，我们通过其他方式获取图层数量
-    // 实际项目中应该在 QMCanvasScene 中添加获取图层数量的方法
+void DemoWindow::onZoomOut() {
+    if (!scene_) return;
+    scene_->onScaleBy(false, QPoint(400, 300));
+    updateStatus();
+}
 
-    // 临时方案：至少显示当前活动图层
-    auto *item = new QListWidgetItem("图层 1", layerList_);
-    item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
-    item->setCheckState(Qt::Checked);
-    layerList_->addItem(item);
+// 修复：添加 const 修饰符
+void DemoWindow::updateStatus() const {
+    if (scene_) {
+        int percent = static_cast<int>(scene_->ratio() * 100);
+        zoomLabel_->setText(QString("缩放: %1%").arg(percent));
+    }
 }

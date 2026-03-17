@@ -34,6 +34,6 @@ QBrush* QMDrawRect::brush(){
     return &brush_;
 }
 
-QMDrawObject* QMDrawRect::clone(){
-    return new QMDrawRect(pen_.color(),pen_.width(),fill_);
+QSharedPointer<QMDrawObject> QMDrawRect::clone(){
+    return QSharedPointer<QMDrawObject>(new QMDrawRect(pen_.color(),pen_.width(),fill_));
 }

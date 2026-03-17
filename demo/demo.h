@@ -5,58 +5,60 @@
 #define TEST_DOME_H
 
 #include <QMainWindow>
-#include <QListWidget>
-#include <QPushButton>
+#include <QToolBar>
+#include <QAction>
 #include <QComboBox>
 #include <QSpinBox>
+#include <QColorDialog>
+#include <QPushButton>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QStatusBar>  // 修复：添加 QStatusBar 头文件
+#include <QShortcut>
+
 #include "QMCanvasView.h"
 #include "QMCanvasScene.h"
+#include "QMDrawPen.h"
+#include "QMDrawRect.h"
 
-class Demo : public QMainWindow {
+class DemoWindow : public QMainWindow {
     Q_OBJECT
+
 public:
-    explicit Demo(QWidget *parent = nullptr);
-    ~Demo();
+    explicit DemoWindow(QWidget *parent = nullptr);
+    ~DemoWindow() override;
 
 private slots:
     void onToolChanged(int index);
     void onColorChanged();
     void onWidthChanged(int width);
-    void onAddLayer();
-    void onDeleteLayer();
-    void onLayerItemChanged(QListWidgetItem *item);
-    void onLayerSelectionChanged();
+    void onFillChanged(bool fill);
+    void onNewLayer();
+    void onClearLayer();
+    void onSaveImage();
     void onUndo();
     void onRedo();
-    void onClearCanvas();
-    void onSaveImage();
-    void updateLayerList();
+    void onZoomIn();
+    void onZoomOut();
 
 private:
     void setupUI();
     void setupConnections();
+    void updateStatus() const;  // 修复：可被设为 const
 
-    QMCanvasView *canvasView_;
-    QMCanvasScene *scene_;
+    QMCanvasView *canvasView_ = nullptr;
+    QMCanvasScene *scene_ = nullptr;
 
-    // 工具栏控件
-    QComboBox *toolCombo_;
-    QPushButton *colorBtn_;
-    QSpinBox *widthSpin_;
+    QComboBox *toolCombo_ = nullptr;
+    QSpinBox *widthSpin_ = nullptr;
+    QPushButton *colorBtn_ = nullptr;
+    QColor currentColor_ = Qt::black;
+    int currentWidth_ = 3;
+    bool fillRect_ = false;
 
-    // 图层面板
-    QListWidget *layerList_;
-    QPushButton *addLayerBtn_;
-    QPushButton *delLayerBtn_;
-
-    // 操作按钮
-    QPushButton *undoBtn_;
-    QPushButton *redoBtn_;
-    QPushButton *clearBtn_;
-    QPushButton *saveBtn_;
-
-    QColor currentColor_;
-    int currentLayerId_;
+    QLabel *statusLabel_ = nullptr;
+    QLabel *zoomLabel_ = nullptr;
 };
 
 #endif //TEST_DOME_H

@@ -26,6 +26,7 @@ void LayerManager::setHide(int index, bool hide){
 
 QSharedPointer<Layer> LayerManager::setActiveObject(QSharedPointer<Layer> object){
     auto obj = AbstractLayer::setActiveObject(object);
+    down_ = QPixmap(base_);
     QPainter pd(&down_);
     object->setBase(base_.size());
     for (auto layers = items_.begin();layers != items_.end();layers++){
@@ -39,6 +40,15 @@ QSharedPointer<Layer> LayerManager::setActiveObject(QSharedPointer<Layer> object
 void LayerManager::switchActiveObject(int index){
     AbstractLayer::switchActiveObject(index);
     update();
+}
+
+void LayerManager::finishActiveObject(){
+    auto ptr = activeItem_->activeObject()->clone();
+    AbstractLayer::finishActiveObject();
+    auto layer_ptr = new Layer;
+    layer_ptr->setBase(base_.size());
+    setActiveObject(QSharedPointer<Layer>(layer_ptr));
+    activeItem_->setActiveObject(QSharedPointer<QMDrawObject>(ptr));
 }
 
 void LayerManager::swap(int a, int b){

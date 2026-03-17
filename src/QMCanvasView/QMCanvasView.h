@@ -37,6 +37,7 @@ public:
     QMCanvasScene* canvasScene() const;
     const Viewport* viewport() const;
     void updateViewport();
+    void setViewportBackground(QColor color=Qt::white);
 
 protected:
     void resizeEvent(QResizeEvent* event) override;

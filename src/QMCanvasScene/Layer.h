@@ -17,6 +17,7 @@ public:
     QSharedPointer<QMDrawObject> setActiveObject(QSharedPointer<QMDrawObject> object) override;
     void switchActiveObject(int index) override;
     void finishActiveObject() override;
+    void undo() override;
     void update() override;
     void clear();
 };

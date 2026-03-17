@@ -59,6 +59,13 @@ void QMCanvasView::updateViewport(){
     viewport_.update();
 }
 
+void QMCanvasView::setViewportBackground(QColor color){
+    QPalette palette = viewport_.palette();
+    palette.setColor(QPalette::Window, color);
+    viewport_.setPalette(palette);
+    viewport_.setAutoFillBackground(true);
+}
+
 void QMCanvasView::resizeEvent(QResizeEvent* event){
     QWidget::resizeEvent(event);
     emit sizeChanged(viewport()->size());

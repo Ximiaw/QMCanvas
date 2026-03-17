@@ -17,7 +17,7 @@ public:
     void draw(QPainter* painter) override;
     QPen* pen() override;
     QBrush* brush() override;
-    QMDrawObject* clone() override;
+    QSharedPointer<QMDrawObject> clone() override;
 };
 
 
