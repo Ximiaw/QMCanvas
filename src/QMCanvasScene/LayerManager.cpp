@@ -21,6 +21,7 @@ bool LayerManager::hide(int index){
 void LayerManager::setHide(int index, bool hide){
     if (index < 0 || index >= items_.size()) return;
     items_.at(index).get()->setHide(hide);
+    update();
 }
 
 QSharedPointer<Layer> LayerManager::setActiveObject(QSharedPointer<Layer> object){

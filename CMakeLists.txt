@@ -15,8 +15,6 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
-include_directories(src/QMCanvasView)
-
 add_subdirectory(src)
 
 add_executable(Test
