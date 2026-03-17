@@ -18,6 +18,7 @@ public:
     void switchActiveObject(int index) override;
     void finishActiveObject() override;
     void update() override;
+    void clear();
 };
 
 #endif //MAIN_LAYER_H

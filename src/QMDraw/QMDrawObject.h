@@ -23,6 +23,7 @@ public:
     virtual void recordPoint (QPoint point);//在begin前禁止记录点，不会触发
     virtual QPen* pen() = 0;
     virtual QBrush* brush() = 0;
+    virtual QMDrawObject* clone() = 0;
 };
 
 

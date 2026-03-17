@@ -44,3 +44,7 @@ QPen* QMDrawPen::pen(){
 QBrush* QMDrawPen::brush(){
     return nullptr;
 }
+
+QMDrawObject* QMDrawPen::clone(){
+    return new QMDrawPen(pen_.color(),pen_.width());
+}

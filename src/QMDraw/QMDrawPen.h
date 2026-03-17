@@ -21,6 +21,7 @@ public:
     void end(QPoint point) override;
     QPen* pen() override;
     QBrush* brush() override;
+    QMDrawObject* clone() override;
 };
 
 

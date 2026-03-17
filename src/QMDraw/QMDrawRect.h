@@ -11,11 +11,13 @@ class QMDrawRect:public QMDrawObject
 private:
     QPen pen_;
     QBrush brush_;
+    bool fill_;
 public:
     QMDrawRect(QColor color=Qt::blue, int width=2, bool fill=false);
     void draw(QPainter* painter) override;
     QPen* pen() override;
     QBrush* brush() override;
+    QMDrawObject* clone() override;
 };
 
 

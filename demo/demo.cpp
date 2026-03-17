@@ -244,8 +244,8 @@ void Demo::onRedo() {
 
 void Demo::onClearCanvas() {
     // 清空当前图层的所有绘制对象
-    // 注意：这里只是一个示例，实际实现可能需要更复杂的逻辑
-    QMessageBox::information(this, "提示", "清空功能需要扩展 Layer 类实现");
+    scene_->activeLayer()->clear();
+    canvasView_->updateViewport();
 }
 
 void Demo::onSaveImage() {

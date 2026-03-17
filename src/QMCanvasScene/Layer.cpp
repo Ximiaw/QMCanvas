@@ -34,7 +34,9 @@ void Layer::switchActiveObject(int index){
 void Layer::finishActiveObject(){
     QPainter painter(&down_);
     activeItem_.get()->draw(&painter);
+    auto obj = activeItem_.get();
     AbstractLayer::finishActiveObject();
+    setActiveObject(QSharedPointer<QMDrawObject>(obj->clone()));
 }
 
 void Layer::update(){
@@ -50,4 +52,11 @@ void Layer::update(){
         else
             draw->get()->draw(&pu);
     }
+}
+
+void Layer::clear(){
+    auto obj = activeItem_->clone();
+    items_.clear();
+    setActiveObject(QSharedPointer<QMDrawObject>(obj));
+    update();
 }

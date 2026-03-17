@@ -36,6 +36,7 @@ public:
     void setCanvasScene(QMCanvasScene* scene);
     QMCanvasScene* canvasScene() const;
     const Viewport* viewport() const;
+    void updateViewport();
 
 protected:
     void resizeEvent(QResizeEvent* event) override;

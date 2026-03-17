@@ -47,3 +47,9 @@ QPen* QMDrawPixmap::pen(){
 QBrush* QMDrawPixmap::brush(){
     return nullptr;
 }
+
+QMDrawObject* QMDrawPixmap::clone(){
+    auto ptr = new QMDrawPixmap(pixmap_);
+    ptr->setFill(fill_);
+    return ptr;
+}

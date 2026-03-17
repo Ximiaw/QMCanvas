@@ -6,6 +6,7 @@
 QMDrawRect::QMDrawRect(QColor color, int width, bool fill){
     pen_ = QPen(color,width);
     brush_ = fill ? QBrush(color.lighter(180)) : QBrush(Qt::NoBrush);
+    fill_ = fill;
 }
 
 void QMDrawRect::draw(QPainter* painter){
@@ -31,4 +32,8 @@ QPen* QMDrawRect::pen(){
 
 QBrush* QMDrawRect::brush(){
     return &brush_;
+}
+
+QMDrawObject* QMDrawRect::clone(){
+    return new QMDrawRect(pen_.color(),pen_.width(),fill_);
 }
