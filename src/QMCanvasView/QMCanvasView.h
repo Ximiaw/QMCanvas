@@ -35,7 +35,7 @@ public:
     WheelMode wheelMode() const;
     void setCanvasScene(QMCanvasScene* scene);
     QMCanvasScene* canvasScene() const;
-    const Viewport* viewport() const;
+    Viewport* viewport();
     void updateViewport();
     void setViewportBackground(QColor color=Qt::white);
 

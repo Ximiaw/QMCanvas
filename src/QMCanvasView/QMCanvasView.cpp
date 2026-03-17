@@ -51,7 +51,7 @@ QMCanvasScene* QMCanvasView::canvasScene() const {
     return scenePointer_.get();
 }
 
-const Viewport* QMCanvasView::viewport() const {
+Viewport* QMCanvasView::viewport(){
     return &viewport_;
 }
 

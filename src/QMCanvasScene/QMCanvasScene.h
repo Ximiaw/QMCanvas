@@ -68,6 +68,8 @@ public:
     void switchLayer(int i);
     void finishActiveLayer();
 
+    const LayerManager& layerManager();
+
     void swapLayer(int a,int b);
     bool isLayerHide(int index);
     void setLayerHide(int index,bool hide);

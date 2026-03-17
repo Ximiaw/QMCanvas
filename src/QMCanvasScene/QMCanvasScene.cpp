@@ -144,6 +144,10 @@ void QMCanvasScene::finishActiveLayer(){
     layerManager_.finishActiveObject();
 }
 
+const LayerManager& QMCanvasScene::layerManager(){
+    return layerManager_;
+}
+
 void QMCanvasScene::swapLayer(int a, int b){
     layerManager_.swap(a,b);
 }
