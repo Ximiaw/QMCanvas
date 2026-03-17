@@ -69,6 +69,14 @@ void AbstractLayer<T>::switchActiveObject(int index){
 }
 
 template <typename T>
+void AbstractLayer<T>::removeActiveObject(int index){
+    if (index<0||items_.size()<=index) return;
+    if (items_.at(index).get() == activeItem_.get()) activeItem_ = QPointer<T>(nullptr);
+    items_.removeAt(index);
+    update();
+}
+
+template <typename T>
 void AbstractLayer<T>::finishActiveObject(){
     if (activeItem_.isNull()) return;
     activeItem_ = QPointer<T>(nullptr);

@@ -43,6 +43,7 @@ void LayerManager::switchActiveObject(int index){
 }
 
 void LayerManager::finishActiveObject(){
+    if (activeItem_.isNull() || !activeItem_->activeObject()) return;
     auto ptr = activeItem_->activeObject()->clone();
     AbstractLayer::finishActiveObject();
     auto layer_ptr = new Layer;
@@ -68,7 +69,7 @@ QPixmap LayerManager::pixmap(){
     QPixmap pixmap = base_;
     QPainter painter(&pixmap);
     painter.drawPixmap(down_.rect(),down_);
-    if (!activeItem_.isNull())
+    if (!activeItem_.isNull() && !activeItem_->hide())
         painter.drawPixmap(activeItem_->pixmap().rect(),activeItem_->pixmap());
     painter.drawPixmap(up_.rect(),up_);
     return pixmap;
