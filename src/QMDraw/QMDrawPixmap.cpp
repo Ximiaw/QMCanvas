@@ -40,10 +40,10 @@ void QMDrawPixmap::draw(QPainter* painter){
     painter->drawPixmap(x,y,w,h,pixmap_);
 }
 
-QPen* QMDrawPixmap::pen() const{
+QPen* QMDrawPixmap::pen(){
     return nullptr;
 }
 
-QBrush* QMDrawPixmap::brush() const{
+QBrush* QMDrawPixmap::brush(){
     return nullptr;
 }

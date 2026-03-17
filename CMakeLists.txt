@@ -18,7 +18,7 @@ find_package(Qt6 COMPONENTS
 add_subdirectory(src)
 
 add_executable(Test
-        main.cpp
+        dome/main.cpp
 )
 
 target_link_libraries(Test PRIVATE

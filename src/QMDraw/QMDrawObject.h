@@ -21,8 +21,8 @@ public:
     virtual void begin(QPoint point);
     virtual void end(QPoint point);
     virtual void recordPoint (QPoint point);//在begin前禁止记录点，不会触发
-    virtual QPen* pen() const = 0;
-    virtual QBrush* brush() const = 0;
+    virtual QPen* pen() = 0;
+    virtual QBrush* brush() = 0;
 };
 
 

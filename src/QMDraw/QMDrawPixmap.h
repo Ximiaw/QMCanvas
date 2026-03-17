@@ -22,8 +22,8 @@ public:
     void setPixmap(QPixmap& pixmap);
 
     void draw(QPainter* painter) override;
-    QPen* pen() const override;
-    QBrush* brush() const override;
+    QPen* pen() override;
+    QBrush* brush() override;
 };
 
 
