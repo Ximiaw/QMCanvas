@@ -11,8 +11,9 @@ void QMDrawPen::draw(QPainter* painter){
     if (points_.size()<2) return;
     QPen p = painter->pen();
     painter->setPen(pen_);
-    if (!points_.isEmpty())
-        painter->drawLines(points_);
+    for (int i=0;i<points_.size()-1;i++){
+        painter->drawLine(points_[i],points_[i+1]);
+    }
     painter->setPen(p);
 }
 
