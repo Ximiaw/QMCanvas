@@ -44,8 +44,10 @@ void Layer::finishActiveObject(){
 
 void Layer::undo(){
     QSharedPointer<QMDrawObject> ptr=nullptr;
-    if (!activeItem_.isNull())
+    if (!activeItem_.isNull()){
         ptr = activeItem_->clone();
+        items_.removeOne(activeItem_.get());
+    }
     AbstractLayer::undo();
     setActiveObject(ptr);
     update();

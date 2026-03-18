@@ -27,6 +27,7 @@ DemoWindow::DemoWindow(QWidget* parent)
 
     // 创建场景
     scene_ = new QMCanvasScene(pixmap, this);
+    scene_->setFactor(1.2);
 
     // 设置初始绘制对象为画笔
     createNewDrawObject();
