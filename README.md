@@ -91,10 +91,9 @@ git clone https://github.com/Ximiaw/QMCanvas.git
 set(CMAKE_PREFIX_PATH "你的Qt6安装路径")
 ```
 
-3. 创建构建目录并编译(请配好构建工具的环境变量，或显式调用构建工具)：
+3. 在项目根目录创建构建目录并编译(请配好构建工具的环境变量，或显式调用构建工具)：
 
 ```bash
-cd QMCanvas
 cmake -G Ninja -S ./ -B ./build/
 cmake --build ./build/
 ```
