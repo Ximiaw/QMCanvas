@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 4.1)
 
-project(Test)
+project(Demo)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
@@ -17,13 +17,13 @@ find_package(Qt6 COMPONENTS
 
 add_subdirectory(src)
 
-add_executable(Test
+add_executable(Demo
         demo/main.cpp
         demo/demo.h
         demo/demo.cpp
 )
 
-target_link_libraries(Test PRIVATE
+target_link_libraries(Demo PRIVATE
         QMCanvas
         Qt::Core
         Qt::Gui
