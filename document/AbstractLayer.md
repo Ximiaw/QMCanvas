@@ -22,7 +22,7 @@
 ## 公共方法
 
 ### `const QList<QSharedPointer<T>>& items() const`
-获取当前管理的所有对象列表
+获取当前管理的所有对象列表  
 **Returns** — 对象智能指针列表的常量引用
 ***
 
@@ -38,17 +38,17 @@
 
 
 ### `bool hide() const`
-获取当前隐藏状态
+获取当前隐藏状态  
 **Returns** — true 表示隐藏，false 表示显示
 ***
 
 ### `void setHide(bool hide)`
-设置隐藏状态
+设置隐藏状态  
 *hide* — true 表示隐藏，false 表示显示
 ***
 
 ### `T* activeObject()`
-获取当前活动的对象指针
+获取当前活动的对象指针  
 **Returns** — 活动对象指针，若无则返回 nullptr
 ***
 
