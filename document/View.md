@@ -55,6 +55,11 @@
 *point* — 缩放中心点（鼠标位置）
 ***
 
+### `void viewportChanged(QRectF rect)`
+视口矩形变化时发送信号  
+*rect* — 新的视口矩形
+***
+
 ## 私有成员
 
 | 成员名 | 类型 | 说明 |

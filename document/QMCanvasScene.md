@@ -146,13 +146,18 @@
 ***
 
 ### `void finishActiveLayer()`
-完成当前活动图层的操作
+完成当前活动图层的操作，将当前图层内的活动绘制对象固化到图层缓存中，并准备新的图层活动对象
 ***
 
 ### `void swapLayer(int a, int b)`
 交换两个图层的位置  
 *a* — 第一个图层索引  
 *b* — 第二个图层索引
+***
+
+### `const LayerManager& layerManager()`
+获取图层管理器的常量引用  
+**Returns** — 图层管理器常量引用，用于访问所有图层信息
 ***
 
 ### `bool isLayerHide(int index)`

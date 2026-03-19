@@ -26,6 +26,11 @@
 **Returns** — 画刷指针
 ***
 
+### `virtual QSharedPointer<QMDrawObject> clone() = 0`
+克隆当前绘制对象，创建具有相同属性的新实例  
+**Returns** — 新的绘制对象智能指针，用于图层复制或撤销重做机制
+***
+
 ## 虚方法（子类可重写）
 
 ### `virtual void begin(QPoint point)`
