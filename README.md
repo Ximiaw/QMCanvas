@@ -60,6 +60,10 @@ graph TD
     QMDrawObject --> QMDrawPen
     QMDrawObject --> QMDrawRect
     QMDrawObject --> QMDrawPixmap
+
+    %% ==================== 水平格式化 ====================
+    QMCanvasView ~~~ View ~~~ Viewport
+    Location ~~~ LayerManager ~~~ Layer
     
     %% ==================== 样式定义 ====================
     classDef layerStyle fill:#0000,stroke:#c7edcc,stroke-width:2px
