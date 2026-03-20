@@ -66,8 +66,8 @@ graph TD
     Location ~~~ LayerManager ~~~ Layer
     
     %% ==================== 样式定义 ====================
-    classDef nodeStyle fill:#0000,stroke:#c7edcc,stroke-width:2px
-    classDef subgraphStyle fill:#0000,stroke:#c7edcc,stroke-width:2px
+    classDef nodeStyle fill:#0000,stroke:#6B7280,stroke-width:2px
+    classDef subgraphStyle fill:#0000,stroke:#6B7280,stroke-width:2px
     
     class ViewLayer,SceneLayer,ManagementLayer,DrawLayer subgraphStyle
     class QMCanvasView,View,Viewport nodeStyle
