@@ -66,16 +66,14 @@ graph TD
     Location ~~~ LayerManager ~~~ Layer
     
     %% ==================== 样式定义 ====================
-    classDef layerStyle fill:#0000,stroke:#c7edcc,stroke-width:2px
-    classDef viewStyle fill:#0000,stroke:#c7edcc,stroke-width:2px
-    classDef sceneStyle fill:#0000,stroke:#c7edcc,stroke-width:2px
-    classDef manageStyle fill:#0000,stroke:#c7edcc,stroke-width:2px
-    classDef drawStyle fill:#0000,stroke:#c7edcc,stroke-width:2px
+    classDef nodeStyle fill:#0000,stroke:#c7edcc,stroke-width:2px
+    classDef subgraphStyle fill:#0000,stroke:#c7edcc,stroke-width:2px
     
-    class QMCanvasView,View,Viewport viewStyle
-    class QMCanvasScene sceneStyle
-    class Location,LayerManager,Layer manageStyle
-    class QMDrawObject,QMDrawPen,QMDrawRect,QMDrawPixmap drawStyle
+    class ViewLayer,SceneLayer,ManagementLayer,DrawLayer subgraphStyle
+    class QMCanvasView,View,Viewport nodeStyle
+    class QMCanvasScene nodeStyle
+    class Location,LayerManager,Layer nodeStyle
+    class QMDrawObject,QMDrawPen,QMDrawRect,QMDrawPixmap nodeStyle
 ```
 
 ### 核心组件
